@@ -1,21 +1,9 @@
+
+
+
 {% load static %}
 {% load humanize %}
-
-{% include "ss/head.html" %}
-{% include "ss/nav.html" %}
-
-{% if messages %}
-  <div class="container mt-3">
-    {% for message in messages %}
-      <div 
-        class="alert 
-               {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}"
-        role="alert">
-        {{ message }}
-      </div>
-    {% endfor %}
-  </div>
-{% endif %}
+{% include "ss/header.html" %}
 
 <div class="container py-5">
     <h1 class="mb-5">Your Shopping Cart</h1>
@@ -23,49 +11,50 @@
         <div class="col-lg-8">
             <div class="card mb-4">
                 <div class="card-body">
-                    {% if items %}
-                        {% for item in items %}
+                    
+                    {% if ct %}
+                        {% for item in ct %}
                             <div class="row cart-items mb-3 align-items-center">
-                             <!-- Ảnh sản phẩm -->
+                                <!-- Ảnh sản phẩm -->
                                 <div class="col-md-3 mb-3">
-                                {% if item.size_sanpham.sanpham.hinh_anh.all %}
-                                    <img src="{{ item.size_sanpham.sanpham.hinh_anh.first.hinh.url }}" class="img-fluid rounded">
+                                    {% if item.size_sanpham.sanpham.hinh_anh.first %}
+                                        <img src="{{ item.size_sanpham.sanpham.hinh_anh.first.hinh.url }}" class="img-fluid rounded" alt="{{ item.size_sanpham.sanpham.ten_sp }}">
+                                    {% else %}
+                                        <img src="{% static 'ss/default.png' %}" class="img-fluid rounded" alt="No image">
+                                    {% endif %}
+                                </div>
+
+                                <!-- Thông tin sản phẩm -->
+                                <div class="col-md-5">
+                                    <h5 class="card-title">{{ item.size_sanpham.sanpham.ten_sp }}</h5>
+                                    <p class="mb-1">Size: {{ item.size_sanpham.size.size }}</p>
+                                </div>
+
+                                <!-- Số lượng -->
+                                 <div class="col-md-2 quantity-control">
+                                    <button class="decrease">-</button>
+                                        <span class="qty">{{item.so_luong}}</span>
+                                        <button class="increase">+</button>
+                                </div> 
+
+    
+
+                                <!-- Giá + xóa -->
+                                <div class="col-md-2 text-end">
+                                    <p class="fw-bold">{{ item.thanhtien|floatformat:0|intcomma }} đ</p>
+                                    <a href="{% url 'xgh' item.id %}" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                                <hr>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>Giỏ hàng trống.</p>
                     {% endif %}
-                 </div>
-
-                 <!-- Thông tin sản phẩm -->
-                <div class="col-md-5">
-                    <h5 class="card-title">{{ item.size_sanpham.sanpham.ten_sp }}</h5>
-                    <p class="mb-1">Size: {{ item.size_sanpham.size.size }}</p>
-                </div>
-
-                <!-- Số lượng -->
-                <div class="col-md-2">
-                    <div class="input-group">
-                        <button class="btn btn-outline-secondary btn-sm" type="button">-</button>
-                        <input style="max-width:100px" type="text" class="form-control form-control-sm text-center quantity-input" value="{{ item.so_luong }}">
-                        <button class="btn btn-outline-secondary btn-sm" type="button">+</button>
-                    </div>
-                </div>
-
-                 <!-- Giá + xóa -->
-                <div class="col-md-2 text-end">
-                    <p class="fw-bold">{{ item.tongtien|floatformat:0|intcomma }} đ</p>
-                    <a href="{%url 'xgh' item.id%}" class="btn btn-sm btn-outline-danger">
-                    <i class="bi bi-trash"></i>
-                     </a>
-                </div>
-        <hr>
-            </div>
-                     {% endfor %}
-                {% else %}
-                 <p>Giỏ hàng trống.</p>
-            {% endif %}
-
-                   
                 </div>
             </div>
-          
+
             <div class="text-start mb-4">
                 <a href="{% url 'tc' %}" class="btn btn-primary">
                     <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
@@ -79,8 +68,11 @@
                 <div class="card-body">
                     <h5 class="card-title mb-4">Order Summary</h5>
                     <div class="d-flex justify-content-between mb-3">
+                        
                         <span>Tạm tính</span>
-                        <span>{{tong_tien|floatformat:0|intcomma }} đ</span>
+                        
+                        <span> {{tongtien|floatformat:0|intcomma}}đ</span>
+                        
                     </div>
                     <div class="d-flex justify-content-between mb-3">
                         <span>Phí vận chuyển</span>
@@ -89,13 +81,13 @@
                     <hr>
                     <div class="d-flex justify-content-between mb-4">
                         <strong>Tổng tiền</strong>
-                        <strong>{{tong_tien|floatformat:0|intcomma }} đ</strong>
+                        <strong> {{tongtien|floatformat:0|intcomma}}đ</strong>
                     </div>
                     <a href="{% url 'tt'%}"> <button class="btn btn-primary w-100">Proceed to Checkout</button> </a>
                     
                 </div>
+                
             </div>
-            
             <!-- Promo code -->
             <div class="card mt-4">
                 <div class="card-body">
@@ -109,3 +101,6 @@
         </div>
     </div>
 </div>
+
+<script src="{% static 'js/AllJS.js'%}"></script>
+

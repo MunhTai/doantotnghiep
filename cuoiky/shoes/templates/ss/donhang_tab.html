@@ -44,22 +44,22 @@
                                         <td>{{ c.don_gia|floatformat:0|intcomma }} đ</td>
                                         <td>{{ c.thanhtien|floatformat:0|intcomma }} đ</td>
                                      </tr>
+                                     {%if hd.trang_thai == 'pending' %}
+                            <p><strong>Phí ship:</strong> {{ hd.phi_ship|floatformat:0|intcomma }} đ</p>
+                            <p><strong>Tổng cộng:</strong> {{ hd.tongcong|floatformat:0|intcomma }} đ</p>
+                            <a href="{% url 'xdh' hd.id%}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                                {%endif%}
                                 {%endif%}
                             {% endfor %}
                         </tbody>
                     </table>
 
                     <div class="text-end">
-                        {%if hd.trang_thai == 'pending' %}
-                            <p><strong>Phí ship:</strong> {{ hd.phi_ship|floatformat:0|intcomma }} đ</p>
-                            <p><strong>Tổng cộng:</strong> {{ hd.tongcong|floatformat:0|intcomma }} đ</p>
-                            <a href="{%url 'huy' hd.id%}" class="btn btn-sm btn-outline-danger">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                        {%else%}
+                        
                         <p><strong>Phí ship:</strong> {{ hd.phi_ship|floatformat:0|intcomma }} đ</p>
                         <p><strong>Tổng cộng:</strong> {{ hd.tongcong|floatformat:0|intcomma }} đ</p>
-                        {%endif%}
                         
                     </div>
                 </div>

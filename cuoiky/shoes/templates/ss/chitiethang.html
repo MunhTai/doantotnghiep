@@ -1,19 +1,130 @@
-{%load static%}
+{% load static %}
 {% load humanize %}
+{% include "ss/head.html" %}
+{% include "ss/header.html" %}
+{%load humanize%}
 
-{% include 'ss/head.html'%}
+ <style> 
+    {% comment %} body {
+        background: #F3F4FF;
+        margin: 0;
+        
+        font-family: Arial, sans-serif;
+    } {% endcomment %}
 
-{% include 'ss/header.html'%}
-{% include 'ss/nav.html'%}
+    .category-box {
+        margin-bottom: 60px;
+    }
 
-{% include 'ss/hang.html'%}
-{% include 'ss/section.html'%}
+    {% comment %} .category-title {
+        font-size: 22px;
+        padding: 12px 20px;
+        text-transform: uppercase;
+        border: 2px solid gray;
+        width: 40%;
+        margin: 0 auto 30px auto;
+        border-radius: 30px;
+        text-align: center;
+        font-weight: bold;
+        background: white;
+    } {% endcomment %}
 
-<p> Hãng {{hang.ten_ncc}} </p>
-{% for d in danhmuc %}
+     .product-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        padding:10px;
+    } 
 
-    <div class="brand">
-          <a href = "{% url 'ctdm' hang.id d.id %}">{{d.ten_dm}} </a>
+    .product-card {
+        background: white;
+        border: 1px solid gray;
+        border-radius: 5px;
+        padding: 15px;
+        text-align: center;
+        transition: 0.3s;
+    }
+
+    .product-card:hover {
+        transform: translateY(-6px);
+        border-color: black;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        cursor: pointer;
+    }
+
+     .product-image img {
+        width: 100%;
+        max-height: 160px;
+        object-fit: contain;
+        display: block;
+        margin: auto;
+        margin-bottom: 10px;
+    } 
+
+    .product-card h3 {
+        font-size: 16px;
+        margin: 8px 0;
+    }
+
+    .product-card p {
+        color: #555;
+        font-size: 14px;
+    }
+    .link {
+        text-decoration : none;
+        color:black
+    }
+</style> 
+
+<body>
+
+    {% for d, sp_list in dm_sp  %}
+    <br>
+    <div class="category-box">
+
+        <h2 class="catalog">{{ d.ten_dm }} {{ncc.ten_ncc}}</h2>
+
+        <div class='product-grid' >
+            {% if sp_list%}
+            {% for sp in sp_list %}
+           
+            <div class="product-card">
+
+                <div class="product-image">
+                    <img src="{{ sp.hinh_anh.first.hinh.url }}" alt="">
+                </div>
+
+                <h3><a href="{% url 'ct' sp.ma_sp%}" class="link">{{ sp.ten_sp }}</a></h3>
+                <p>{{ sp.mo_ta|truncatechars:50 }}</p>
+
+                <div>
+                    {% if sp.giam_gia %}
+                        <s>{{ sp.giam_gia | floatformat:0 | intcomma }}đ</s>  
+                        <strong>{{ sp.gia | floatformat:0 | intcomma }}đ</strong>
+                    {% else %}
+                        <strong>{{ sp.gia | floatformat:0 | intcomma  }}đ</strong>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            
+                    
+            {% endfor %}
+            {% else %}
+                <strong>
+    Chưa có sản phẩm nào
+</strong>
+            {%endif%}
         </div>
-     
-{%endfor%}
+        
+    </div>
+        {% if sp_list%}
+        <span> <a href='{% url 'mr' d.ten_dm ncc.id %}'>  Xem thêm </a> </span>
+        {%else%}
+        {%endif%}
+    {% endfor %}
+
+</body>
+
+{% include 'ss/footer.html' %}

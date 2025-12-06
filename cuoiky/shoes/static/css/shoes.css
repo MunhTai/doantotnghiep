@@ -1,5 +1,5 @@
 .btn{
-    background-color: green;
+    background-color: #3F4B97;
     
 }
 
@@ -12,14 +12,32 @@
     text-decoration: none;
 }
 
-.img-fluid {
-     width: 100%;
-    height: auto;
-    display: block;
-    max-width: 500px;
-    margin-left: auto;
-    filter: drop-shadow(2px 4px 6px black);
+
+
+.bangsp .img-wrapper {
+    width: 100%;       /* chiều ngang full container */
+    max-width: 300px;  /* tăng từ 300px lên 400px */
+    height: 400px;     /* tăng chiều cao */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;    /* căn giữa nếu muốn */
 }
+
+.bangsp .img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* ảnh đầy khung, không méo */
+    border-radius: 10px;
+    box-shadow: 2px 4px 6px rgba(0,0,0,0.5);
+}
+
+
+.bangsp .img-wrapper img:hover {
+    transform: scale(1.05); /* hiệu ứng zoom nhẹ */
+}
+
 
 .col-sm-6 h1{
     margin-top: 60px;
@@ -27,7 +45,7 @@
 
 .bg-light {
     --bs-bg-opacity: 1;
-    background-color: green !important;
+    background: linear-gradient(to right, #DFE4FF, #8C94C9, #3F4B97) !important;
     margin-top: 15px;
 }
 
@@ -236,6 +254,9 @@ img.lazy.loaded{
            
         }
 
+
+
+
  .sp{
             width: 400px;
             height: 400px;
@@ -302,6 +323,7 @@ img.lazy.loaded{
             padding-left: 180px;
             padding-top: 10px;
             border: 1px 2px 3px 15px black;
+            width: 120%;
 
         }
 .link{
@@ -315,12 +337,12 @@ img.lazy.loaded{
     align-items: flex-start;
      margin: 20px 0;
     padding-top: 35px;}
- form{
-    /* background-color: whitesmoke; */
+  /* form{
+    
      padding: 20px;
      border: 1px solid #ddd;
     border-radius: 5px;
-    margin: 0 10px;}
+    margin: 0 10px;} */
     
     
     legend {
@@ -330,12 +352,13 @@ img.lazy.loaded{
     }
 
     .tao{
-        background-color: green;
+        background-color: #3F4B97;
         width: 70%;
         font-size: 20px;
         border-radius: 5px;
         display: block;
         margin: 0 auto;
+        color: bisque;
         
     }
     .tao a{

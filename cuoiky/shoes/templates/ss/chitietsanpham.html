@@ -2,49 +2,34 @@
 {% load humanize%}
  
 
-<html>
+
     {% include 'ss/head.html' %}
 
-    {% include "ss/nav.html" %}
+    {% include "ss/header.html" %}
 
-
-    {% csrf_token %}
+<html>
+   
+    
     <article class="bangsp">
-       <img src="{{ctsp.hinh_anh.first.hinh.url}}"
-     class="img-fluid rounded shadow"   >
-          
-        
+        <img src="{{ctsp.hinh_anh.first.hinh.url}}" alt="" class="sp">
         <section class="noidung">
-            <p class="ten">
-                [New chính hãng] {{ ctsp.ten_sp }}
-            </p>
-            <p class="noidung1">
+           [New Chính Hãng] {{ctsp.ten_sp}}
+           <p class="noidung1">
                 &nbsp; -Thương hiệu: {{ ctsp.nhacungcap }} <br>
                 &nbsp; -Mã sản phẩm: {{ ctsp.ma_sp }} <br>
                 &nbsp; -Mô tả: {{ ctsp.mo_ta }} <br>
                 &nbsp; -Giá tốt nhất thị trường <br>
                 &nbsp; -Xem trực tiếp sản phẩm tại: 122/27/117/9/9 Tôn Đản Phường Khánh Hội TP.HCM  <br>
             </p>
-            
-                {%if ctsp.giam_gia%}
+           {%if ctsp.giam_gia%}
                     Giá: <span id='giatien'> <s style ="color: black; font-size:20px">{{ ctsp.gia | floatformat:0 | intcomma }} </s> 
                     &nbsp{{  ctsp.giam_gia | floatformat:0 | intcomma }} </span> <br>
                 {%else%}
                     Giá: <span id='giatien'>
-                    {{ ctsp.gia | floatformat:0 | intcomma }} </span> <br>
+                    {{ ctsp.gia_ban | floatformat:0 | intcomma }} </span> <br>
                 {%endif%}
-            
-
-{% comment %} <form id="themGioForm" class="khung" >
-    {% csrf_token %}
- 
-
-    
-</form> {% endcomment %}
-
-
-
-{% if user.is_authenticated %}
+           <p class="noidung1">
+            {% if user.is_authenticated %}
     {% if user.is_staff %}
         
         <form action="{% url 'x' ctsp.ma_sp %}" method="post" style="margin-top:10px;">
@@ -74,9 +59,8 @@
             </select>
             <span id="tonkho"></span><br>
 
-            <!-- Số lượng -->
-            <label class="noidung1">Số lượng:</label><br>
-            <input type="number" name="sl" min="1" value="1" style="width:15%" class="noidung1"><br>
+    <label class="noidung1">Số lượng:</label><br>
+    <input type="number" name="sl" min="1" value="1" style="width:15%;" class="noidung1"><br>
 
             <!-- Nút -->
             <button class="o1 btn-card bi bi-cart-plus" type="submit" name="action" value="add">
@@ -97,48 +81,17 @@
         <a href="{% url 'dk' %}">Tại đây</a>
     </p>
 {% endif %}
+          
             
         </section>
-
     </article>
 
-    <div class="tabs-pro-detail">
-        <ul class="nav nav-tabs" id="tabsProDetail" role="tablist"> 
-            <li class="nav-item">
-                <a class="nav-link active" id="info-pro-detail-tab" data-toggle="tab" 
-                  href="#info-product" aria-selected="true">Thông tin sản phẩm</a>
-            </li>
-
-              <li class="nav-item">
-                <a class="nav-link active" id="commentfb-pro-detail-tab" data-toggle="tab" 
-                href="#commentfb-pro-detail" role="tab" aria-selected="true">Bình luận</a>
-            </li>
-        </ul>
-    </div>   
-    <div class="banggt">
-            <img src="{% static "images/hinhanh/logo.jpg" %}" alt="">
-            <p class="gt1">
-                - Sản phẩm trước khi đến tay khách hàng đã được Shop xử lí, 
-                kiểm tra thật kỹ càng cùng với sự cam kết 100% chính hãng trọn đời (Fake - Hoàn Tiền -Tặng Hàng ) 
-                . Kèm với đó là chính sách bảo hành trong vòng 6 tháng, đổi 1:1 với những sản phẩm bị lỗi
-                trong 1 tháng sử dụng. Để mọi người có thể yên tâm, thoải mái lựa chọn mà không phải sợ hàng kém chất lượng, hàng giả, hàng nhái,...
-                <hr width="60%" size="4px" color="Green" style="margin-left:240px">
-            </p>
-            <p class="gt2">
-               <b> Địa chỉ shop </b> <br> <br>
-
-                122/27/117/9/9 Tôn Đản Phường Khánh Hội Tp.Hồ Chí Minh Việt Nam.  <br>  <br>                             
-                 
-                <b>Hotline</b> : 0925 191 336 ( Mr. Tài) <br> <br>
-                
-                <u>Nếu bạn ở xa thì hãy truy cập</u> <br> <br>
-                
-                <b>Website</b> : <u><a href="{% url 'tc'%}">shopnmt.com</a></u>
-                 
-            </p>
-        <div>  
+    
 </html>
 
+
+
+{% include "ss/footer.html" %}
 
 <script>
  document.getElementById("size-select").addEventListener("change", function () {
@@ -154,5 +107,3 @@
     }
 });
 </script>
-
-

@@ -1,0 +1,51 @@
+{% load static %}
+{% load humanize %}
+
+{% include 'ss/head.html' %}
+
+{% comment %} <div class="container">
+
+    <h2>Tất cả sản phẩm</h2>
+    <div class="category-list">
+        {% for s in sp %}
+            <div class="category-item">
+                {{ s.ten_sp }}
+            </div>
+        {% empty %}
+            <p>Không có sản phẩm nào.</p>
+        {% endfor %}
+    </div>
+     <li><a href="{% url 'tsp'%}"><i class="bi bi-bag-plus"></i> <span>+ Thêm Sản Phẩm</span></a></li>
+</div> {% endcomment %}
+
+<div class="container">
+
+    <h2>Tất cả sản phẩm</h2>
+           <div class="card shadow-sm">
+                <div class="card-body">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Tên Sản Phẩm</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in sp %}
+                            <tr>
+                               <td class="d-flex justify-content-between align-items-center">
+                                        {{ s.ten_sp }}
+
+                                    <a href="{% url 'x' s.ma_sp %}" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {%endfor%}
+                    
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    <li><a href="{% url 'tsp'%}"><i class="bi bi-folder-plus"></i> <span>+ Thêm Sản Phẩm</span></a></li>
+</div>

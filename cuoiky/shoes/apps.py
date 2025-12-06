@@ -5,5 +5,4 @@ class ShoesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'shoes'
 
-    def ready(self):
-        import shoes.signals
+ 

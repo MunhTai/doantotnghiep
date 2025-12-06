@@ -1,16 +1,17 @@
 {% load static %}
 {% load humanize %}
-{% include "ss/head.html" %}
+{% comment %} {% include "ss/head.html" %} {% endcomment %}
+
+<link rel="stylesheet" href="{% static 'css/Them.css'%}">
 <body>
 
 
 {% include "ss/header.html" %}
 
-{%include "ss/nav.html" %}
+{% comment %}
 
-{% include "ss/hang.html" %}
 
-{% include "ss/section.html" %}
+
 
 {% if messages %}
   <div class="container mt-3">
@@ -28,11 +29,21 @@
 <main style=" max-width:70%;
     margin-left: 230px;">
 <article class="container mt-5">
-<form method="post">
+<form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   <input type="text" name="t" placeholder="Tên sản phẩm">
   <input type="text" name="g" placeholder="Giá sản phẩm">
   <input type="text" name="gg" placeholder="Giá giảm">
+  <input type="file" name="hinh"  multiple>
+
+  <select name='s' multiple> 
+    <option value=''> Chọn Size </option>
+    {%for s in size_list%}
+        <option value='{{s.size}}'> {{s.size}}</option>
+    {% endfor %}
+  </select>
+
+  <input type="text" name="sl" placeholder="Số lượng sản phẩm">
 
   <select name='h'> 
     <option value=''> Chọn nhà cung cấp </option>
@@ -57,4 +68,66 @@
 </main>
 
 
+</body> {% endcomment %}
+
+
+
+<body>
+    <div class="header">
+        <div class="container mt-5 ">
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <h1>Thêm Sản Phẩm</h1>
+                </div>
+                <div class="col-sm-6">
+                    <a href="ss/index.html"><img src="{% static 'images/hinhanh/logo.png'%}" alt="" class="img-fluid"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="body">
+        <div class="container mt-3">
+            <div class="alert" role="alert">
+            </div>
+        </div>
+        <main style=" max-width:70%; margin-left: 230px;">
+            <article class="container mt-5">
+                <form method="post" enctype="multipart/form-data">
+                  {% csrf_token%}
+                    <input type="text" name="t" placeholder="Tên sản phẩm">
+                    <input type="text" name="g" placeholder="Giá sản phẩm">
+                    <input type="text" name="gg" placeholder="Giá giảm">
+                    <input type="file" name="hinh" multiple>
+
+                    <select name='s' multiple>
+                        <option value=''> Chọn Size </option>
+                        {%for s in size_list%}
+                            <option value='{{s.size}}'> {{s.size}}</option>
+                        {% endfor %}
+                    </select>
+
+                    <input type="text" name="sl" placeholder="Số lượng sản phẩm">
+
+                    <select name='h'>
+                        <option value=''> Chọn nhà cung cấp </option>
+                        {%for n in ncc_list%}
+                             <option value='{{n.ten_ncc}}'> {{n.ten_ncc}}</option>
+                        {% endfor %}
+                    </select>
+
+
+
+                    <select name='d'>
+                        <option value=''> Chọn danh mục </option>
+                        {%for d in dm_list%}
+        <option value='{{d.ten_dm}}'> {{d.ten_dm}}</option>
+    {% endfor %}
+                    </select>
+
+                    <button type="submit" class='btthem'>Thêm</button>
+                </form>
+
+            </article>
+        </main>
+    </div>
 </body>

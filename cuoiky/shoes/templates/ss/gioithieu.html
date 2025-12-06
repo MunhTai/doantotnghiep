@@ -2,56 +2,89 @@
  
  {% include "ss/head.html" %}
 
- {% include "ss/nav.html" %}
+ {% include "ss/header.html" %}
+
+ <style>
+    .banggt{
+        text-align: center;
+        font-weight: bold;
+        font-size: 27px;
+        background-color: white;
+        /* height: 205%; */
+        width: 80%;
+         margin-left: 150px;
+    
+    }
+
+    .gt{
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    .gt1{
+        font-weight: normal;
+        text-align: justify;
+    }
+
+    .gt2{
+        text-align: left;
+        font-weight: normal;
+        font-size: 24px;
+    }  
+    
+    .img{
+        
+        width:30%
+    }
+
+</style>
 
  <article class="banggt">
             <caption>
-                NMT SHOP
-                 <hr width="30%" size="4px" color="Green" style="margin-left:410px" >
-                <p class="gt">
+                TDK SHOES
+                 <hr width="30%" size="4px" color="#3F4B97" style="margin-left:410px" >
+                <p claduong="gt">
                     Authentic - Reputation - Quality
-                <hr width="60%" size="4px" color="Green" style="margin-left:240px">
+                <hr width="60%" size="4px" color=" #3F4B97" style="margin-left:240px">
                 </p>
             </caption>
             <p class="gt1">
-            - Thành lập từ năm 2018 đến hiện tại, NMT SHOP
+            - Thành lập từ năm 2018 đến hiện tại, TDK SHOES
             là một shop nhỏ chuyên bán đồ thời trang chính hãng. Trải qua khoảng thời gian dài, 
-            lắng nghe ý kiến từ khách hàng NMT SHOP không ngừng phát triển mở rộng không gian, 
+            lắng nghe ý kiến từ khách hàng TDK SHOES không ngừng phát triển mở rộng không gian, 
             bán thêm những sản phẩm mới chính hãng.
             Cải thiện mẫu mã, cải thiện về chất lượng sản phẩm, 
             luôn cố gắng cung cấp những hàng hóa giá hợp lí đối với người tiêu dùng Việt để cho mọi người có thể dễ dàng tiếp cận tới những sản phẩm chính hãng.
             </p>
-            <img src="{% static "images/hinhanh/logo.jpg" %}" alt="">
+            <img src="{% static "images/hinhanh/logo.png" %}" alt="" class='img'>
             <p class="gt1">
-                - Sản phẩm trước khi đến tay khách hàng đã được Shoes Shop NMT xử lí, 
+                - Sản phẩm trước khi đến tay khách hàng đã được TDK SHOES  xử lí, 
                 kiểm tra thật kỹ càng cùng với sự cam kết 100% chính hãng trọn đời (Fake - Hoàn Tiền -Tặng Hàng ) 
                 . Kèm với đó là chính sách bảo hành trong vòng 6 tháng, đổi 1:1 với những sản phẩm bị lỗi
                 trong 1 tháng sử dụng. Để mọi người có thể yên tâm, thoải mái lựa chọn mà không phải sợ hàng kém chất lượng, hàng giả, hàng nhái,...
-                <hr width="60%" size="4px" color="Green" style="margin-left:240px">
+                <hr width="60%" size="4px" color="#3F4B97" style="margin-left:240px">
             </p>
 
             <b>
-                - Lời cuối, NMT SHOP gửi lời cảm ơn chân thành đến những khách hàng đã tin tưởng 
+                - Lời cuối, TDK SHOES gửi lời cảm ơn chân thành đến những khách hàng đã tin tưởng 
                 và lựa chọn ủng hộ để shop có được thành công như ngày hôm nay,
                  hy vọng quý khách sẽ hài lòng với sản phẩm của chúng tôi.
                   Sự ủng hộ của bạn có nghĩa quan trọng và rất lớn đối với chúng tôi. 
                   Chúng tôi ngày ngày vẫn cố gắng tiếp thu lắng nghe và thay đổi từ các bạn 
                   để mang lại trải nghiệm tuyệt vời cũng như những sản phẩm thật tốt thật chất lượng đến tay mọi người.
-                  <hr width="100%" size="4px" color="Green">
-                </b>
+                  <hr width="100%" size="4px" color="#3F4B97">
+            </b>
             
             <p class="gt2">
                <b> Địa chỉ shop </b> <br> <br>
 
-                122/27/117/9/9 Tôn Đản Phường Khánh Hội Tp.Hồ Chí Minh Việt Nam.  <br>  <br>                             
+                122/27 Trần Hê Thương, 3 - Quận 2, Tp.HCM  <br>  <br>                             
                  
-                <b>Hotline</b> : 0925 191 336 ( Mr. Tài) <br> <br>
+                <b>Hotline</b> : 0825 991 538 <br> <br>
                 
                 <u>Nếu bạn ở xa thì hãy truy cập</u> <br> <br>
                 
-                <b>Website</b> : <u><a href="{% static 'ss/index.html'%}">shopnmt.com</a></u>
+                <b>Website</b> : <u><a href="{% static 'duong/index.html'%}">tdkshoes.com</a></u>
                  
             </p>
         </article>
-
     {% include "ss/footer.html" %}

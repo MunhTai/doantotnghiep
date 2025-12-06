@@ -1,0 +1,51 @@
+{% load static %}
+{% load humanize %}
+{% comment %} {% include "ss/head.html" %} {% endcomment %}
+
+<link rel="stylesheet" href="{% static 'css/Them.css'%}">
+
+{% include "ss/header.html" %}
+
+
+
+
+<div class="header">
+    <div>
+        <div class="row">
+            <div class="col-sm-6 ">
+                <h1>Thêm danh mục</h1>
+                <p>Điền thông tin danh mục cần thêm</p>
+            </div>
+            <div class="col-sm-6">
+                <a href="ss/index.html"><img src="{% static 'images/hinhanh/logo.png'%}" alt="" class="img-fluid"></a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="body">
+
+    <body>
+
+        <main style=" max-width:70%;
+    margin-left: 230px;">
+            <article class="container mt-5">
+                <form method="post" enctype="multipart/form-data">
+                  {%csrf_token%}
+                    <input type="text" name="t" placeholder="Tên danh mục">
+                    <input type="text" name="m" placeholder="Mô tả">
+
+                    <select name='n' multiple>
+                        <option value='tencc'>---Chọn nhà sản xuất---</option>
+                        {%for n in ncc_list%}
+                          <option value='{{n.ten_ncc}}'> {{n.ten_ncc}}</option>
+                        {% endfor %}
+                    </select>
+
+                    <button class='btthem' type="submit">Thêm</button>
+                </form>
+
+            </article>
+        </main>
+    </body>
+</div>
+

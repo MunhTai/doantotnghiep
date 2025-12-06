@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from shoes.models import Danhmuc,SanPham,HinhAnhSanPham,Size,SizeSanPham,Nguoidung,NhaCungCap,GioHang,Chitietgiohang,Hoadon,Chitiethoadon
+from shoes.models import Danhmuc,SanPham,HinhAnhSanPham,Size,SizeSanPham,Nguoidung,NhaCungCap,GioHang,Chitietgiohang,Hoadon,Chitiethoadon,Otp
 from .form import dangkyform
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate,login,logout
@@ -7,6 +7,7 @@ from django.contrib import messages
 from decimal import Decimal
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Sum
+from .utils import generate_otp, send_otp_email
 # Create your views here.
 
 def gioithieu(request):
@@ -18,28 +19,33 @@ def index(request):
     giamgia = SanPham.objects.filter(giam_gia__isnull=False)
     return render(request,'ss/index.html',{'hang':hang,'giamgia':giamgia})
 
-def chitiethang(request, ncc_id):
-    hang = NhaCungCap.objects.get(id=ncc_id)
-    danhmuc_list = Danhmuc.objects.filter(sanphams__nhacungcap=hang).distinct()
-
-    context = {
-        'hang':hang,
-        'danhmuc':danhmuc_list,
-    }
-    return render(request,'ss/chitiethang.html',context)
-
-def chitietdanhmuc(request,dm_id,id_ncc):
+def chitiethang(request,id_ncc):
     hang = NhaCungCap.objects.get(id=id_ncc)
-    dm =Danhmuc.objects.get(id=dm_id)
-    sp = SanPham.objects.filter(nhacungcap=hang,danhmuc=dm)
+    dm = Danhmuc.objects.filter(ncc=hang)
+
+    dm_sp_dict = []
+    for d in dm:
+        s = SanPham.objects.filter(danhmuc=d , nhacungcap=hang)[:4]
+        dm_sp_dict.append((d,s))
 
     context = {
-        'hang':hang,
-        'dm':dm,
-        'sp':sp,
-    }
+         'ncc':hang,
+         'dm':dm,
+         'dm_sp':dm_sp_dict
+     }
 
-    return render(request, 'ss/chitietdanhmuc.html/',context )
+    return render(request, 'ss/chitiethang.html/',context )
+def more(request,tendm,idncc):
+    ncc = NhaCungCap.objects.get(id=idncc)
+    dm = Danhmuc.objects.get(ten_dm=tendm,ncc=ncc)
+    more = SanPham.objects.filter(danhmuc=dm,nhacungcap=ncc)
+
+    context = {
+        'ncc':ncc,
+        'dm':dm,
+        'more':more
+    }
+    return render(request,'ss/more.html',context)
 
 def chitiet(request, masp ):
     ctsp = SanPham.objects.get(ma_sp=masp)
@@ -52,69 +58,67 @@ def chitiet(request, masp ):
     }
     return render(request,'ss/chitietsanpham.html',context)
 
-def sanphamadidas(request):
-    ncca = NhaCungCap.objects.get(ten_ncc='ADIDAS')
-    spa = SanPham.objects.filter(nhacungcap=2)
-
-    context = {
-        "ncca" : ncca,
-        "spa" : spa,
-    }
-    return render(request,'ss/sanphamadidas.html',context)
-
-def sanphamnike(request):
-    danhmuc = Danhmuc.objects.all()
-    nccn = NhaCungCap.objects.get(ten_ncc='NIKE')
-    spn = SanPham.objects.filter(nhacungcap=1)
-
-    context = {
-        "dm":danhmuc,
-        "nccn" : nccn,
-        "spn" : spn,
-    }
-    return render(request,'ss/sanphamnike.html',context)
-
-def sanphamjordan(request):
-    nccj = NhaCungCap.objects.get(ten_ncc='JORDAN')
-    spj = SanPham.objects.filter(nhacungcap=3)
-
-    context = {
-        "nccj" : nccj,
-        "spj" : spj,
-    }
-    return render(request,'ss/sanphamjordan.html',context)
-
-def sanphampuma(request):
-    nccp = NhaCungCap.objects.get(ten_ncc='PUMA')
-    spp = SanPham.objects.filter(nhacungcap=4)
-  
-    context = {
-        "nccp" : nccp,
-        "spp" : spp,
-    }
-    return render(request,'ss/sanphampuma.html',context)
-
-# def xemthem (request,madm):
-#     xt = Danhmuc.objects.get(ma_dm=madm)
-#     sp = SanPham.objects.filter(danhmuc=xt)
-
-#     context = {
-#         'xt': xt,
-#         'sp': sp,
-#     }
-#     return render(request,'ss/xemthem.html',context)
 
 def dangky(request ):
-    if request.method == 'POST': 
-        form = dangkyform(request.POST )
-        if form.is_valid():
-            form.save()
+    # if request.method == 'POST': 
+    #     form = dangkyform(request.POST )
+    #     if form.is_valid():
+    #         user = form.save(commit=False)
+    #         user.is_active = False
+    #         user.save()
+
+    #         code = generate_otp()
+    #         Otp.objects.create(user=user, code=code)
+
+    #         send_otp_email(user,code)
+    #         return redirect('xac_thuc_otp',user_id=user.id)
+    # else:
+    #     form = dangkyform()
+    # return render(request,'ss/dangky.html',{'form':form})
+
+    if request.method == 'POST':
+        ten = request.POST.get('username')
+        mk = request.POST.get('password')
+        mail = request.POST.get('email')
+
+        if Nguoidung.objects.filter(username=ten).exists():
+            messages.error(request,f'{ten} đã tồn tại.Hãy đặt tên khác ')
+            return redirect('dk')
+        
+        user = Nguoidung.objects.create(
+            username = ten,
+            password = mk,
+            email = mail,
+            is_active = False
+
+        )
+        code = generate_otp()
+        Otp.objects.create(user=user, code=code)
+        send_otp_email(user,code)
+
+        return redirect("xac_thuc_otp", user_id=user.id)
+
+    return render(request, "ss/dangky.html")
+
+def otp(request,user_id):
+    user =Nguoidung.objects.get(id=user_id)
+
+    if request.method == "POST":
+        code = request.POST.get('otp')
+
+        otp_obj = Otp.objects.filter(user=user, code=code).first()
+
+        if otp_obj:
+            user.is_active = True
+            user.save()
+
+            otp_obj.delete()
+
             return redirect('dn')
-        else:
-            return render(request,'ss/dangky.html',{'form':form})
-    else:
-        form = dangkyform()
-    return render(request,'ss/dangky.html',{'form':form})
+        return render (request, 'ss/otp.html',{'error': 'Sai mã OTP'})
+    
+    return render(request,'ss/otp.html')
+
 
 def dangnhap(request):
     if request.method == 'POST':
@@ -155,36 +159,92 @@ def themsp (request):
         ten = request.POST.get('t')
         gia = request.POST.get('g')
         giamgia = request.POST.get('gg')
+        hinhanh = request.FILES.getlist('hinh')
+        kichco = request.POST.getlist('s')
+        soluong = request.POST.get('sl')
         hang = request.POST.get('h')
         danhmuc= request.POST.get('d')
+        ncc = NhaCungCap.objects.get(ten_ncc=hang)
+        dm = Danhmuc.objects.get(ten_dm=danhmuc)
+     
+        if not (ten and gia and hang and danhmuc and ncc and dm and hinhanh and kichco):
+            messages.error(request, 'Vui lòng nhập đủ các dữ liệu của sản phẩm')
+        else:
+            sp = SanPham.objects.create(
+                ten_sp=ten,
+                gia=Decimal(gia),
+                giam_gia=Decimal(giamgia)
+                if giamgia
+                else None,
+                nhacungcap=ncc,
+            )
 
-        try: 
-            ncc = NhaCungCap.objects.get(ten_ncc=hang)
-        except:
-            ncc = NhaCungCap.objects.create(ten_ncc=hang)
-
-        try:
-            dm = Danhmuc.objects.get(ten_dm=danhmuc)
-        except:
-            dm = Danhmuc.objects.create(ten_dm=danhmuc)
-
-        sp = SanPham.objects.create(
-            ten_sp=ten,
-            gia=Decimal(gia),
-            giam_gia=Decimal(giamgia)
-            if giamgia
-            else None,
-            nhacungcap=ncc,
-        )
-        
-        sp.danhmuc.add(dm)
-        messages.success(request,f'Đã thêm mới sản phẩm {sp}')
+            for hinh in hinhanh:
+                HinhAnhSanPham.objects.create(hinh=hinh,san_pham=sp)
+            
+            for s in kichco:
+                size = Size.objects.get(size=s)
+                SizeSanPham.objects.create(
+                    sanpham=sp,
+                    size=size,
+                    so_luong = soluong
+                 )
+            sp.danhmuc.add(dm)
+            messages.success(request,f'Đã thêm mới sản phẩm {sp}')
 
     
     return render(request, 'ss/themsanpham.html',{'ncc_list':NhaCungCap.objects.all(),
-                                                  'dm_list':Danhmuc.objects.all(),})
+                                                  'dm_list':Danhmuc.objects.all(),
+                                                  'size_list':Size.objects.all()})
+
+def themncc(request):
+    dm = Danhmuc.objects.all()
+    if request.method == 'POST':
+        ten = request.POST.get('t')
+        sodt= request.POST.get('sdt')
+        mail = request.POST.get('e')
+        diachi= request.POST.get('dc')
+        danhmuc = request.POST.getlist('d')
+
+        taoncc = NhaCungCap.objects.create(
+            ten_ncc= ten,
+            sdt = sodt,
+            email = mail,
+            dia_chi = diachi
+        )
+
+        for d in danhmuc:
+            dm_obj = Danhmuc.objects.get(id=d)
+            dm_obj.ncc.add(taoncc)
+            messages.success(request,f'Đã thêm mới nhà cung cấp {taoncc.ten_ncc}')
 
 
+    context ={
+        'dm_list':dm
+    }
+    return render(request,'ss/themncc.html',context)
+
+def themdanhmuc(request):
+    ncc_list = NhaCungCap.objects.all()
+    if request.method == 'POST':
+        ten = request.POST.get('t')
+        mota = request.POST.get('m')
+        ncc = request.POST.getlist('n')
+
+        taodm = Danhmuc.objects.create(
+            ten_dm = ten,
+            mo_ta = mota
+        )
+
+        for n in ncc:
+            n_obj = NhaCungCap.objects.get(ten_ncc=n)
+            taodm.ncc.add(n_obj)
+        
+    context={
+        'ncc_list':ncc_list
+    }
+
+    return render(request,'ss/themdanhmuc.html',context)
 def xoasp(request,masp):
     sp = get_object_or_404(SanPham, ma_sp=masp)
 
@@ -195,138 +255,258 @@ def xoasp(request,masp):
     else:
         messages.error(request,'Không thể xóa')
         return redirect('ct')
+    
+def suasp(request,masp):
+    sp = get_object_or_404(SanPham,ma_sp=masp)
 
-        
-def themvaogio(request):
+    hinhsanpham = HinhAnhSanPham.objects.filter(san_pham=sp)
+    sizesanpham = SizeSanPham.objects.filter(sanpham=sp)
+    dmsanpham = sp.danhmuc.filter()
+    nccsanpham = sp.nhacungcap.ten_ncc
+
+    hinh_list = HinhAnhSanPham.objects.all()
+    size_list = Size.objects.all()
+    ncc_list = NhaCungCap.objects.all()
+    dm_list = Danhmuc.objects.all()
+
     if request.method == 'POST':
-        user = request.user
+        ten = request.POST.get('t')
+        gia = request.POST.get('g')
+        giamgia = request.POST.get('gg')
+        hinhanh = request.FILES.getlist('hinh')
+        kichco = request.POST.getlist('s')
+        soluong = request.POST.get('sl')
+        hang = request.POST.get('h')
+        danh_muc = request.POST.getlist('d')
+
+        # Kiểm tra dữ liệu bắt buộc
+        if not (ten and gia and hang and kichco):
+            messages.error(request, 'Vui lòng nhập đủ các dữ liệu bắt buộc')
+        else:
+            sp.ten_sp=ten
+            sp.gia=Decimal(gia)
+            sp.giam_gia = Decimal(giamgia) if giamgia is not None else None
+            sp.nhacungcap = NhaCungCap.objects.get(ten_ncc=hang)
+            sp.save()
+
+            for hinh in hinhanh:
+                HinhAnhSanPham.objects.create(hinh=hinh,san_pham=sp)
+
+            for s in kichco:
+                size_obj = Size.objects.get(size=s)
+                SizeSanPham.objects.update_or_create(
+                    sanpham = sp,
+                    size = size_obj,
+                    defaults={'so_luong':soluong or 1}
+                )
+
+            sp.danhmuc.clear()
+
+            for dm in danh_muc:
+                dm_obj = Danhmuc.objects.get(ten_dm=dm)
+                sp.danhmuc.add(dm_obj)
+
+            messages.success(request, f'Đã cập nhật thành công sản phẩm {sp.ten_sp}')
+            return redirect('ct',masp=sp.ma_sp)
+        
+        context = {
+        'sp': sp,
+        'hinh_list': hinh_list,
+        'size_list': size_list,
+        'size_da_co': sizesanpham,
+        'ncc_list': ncc_list,
+        'dm_list': dm_list,
+        'dm_da_co': dmsanpham,
+        'hinh_da_co':hinhsanpham,
+        'ncc_da_co':nccsanpham
+    }
+    return render(request,'ss/suasanpham.html',context)
+
+
+
+
+def themvaogio(request):
+
+    # kiểm tra có submit form không và form có phải phương thức POST không
+
+    if request.method == "POST":
+        user = request.user # lấy user đang đăng nhập
+
+        # Lấy các thông tin được gửi từ form 
         masp = request.POST.get('masp')
-        size_id = request.POST.get('size_id')
-        soluong = int(request.POST.get('sl',1))
+        size = request.POST.get('size_id')
+        soluong = int(request.POST.get('sl')) #chuyển từ dạng string sang int
+        action = request.POST.get('action') # lấy loại hành động để phân biệt
 
-        if not size_id:
-            messages.error(request,"Vui lòng chọn Size cho sản phẩm!!")
-            return redirect('tc')
+        #kiểm tra chọn size sản phẩm chưa
+        if not size:
+            messages.error(request,'Chưa chọn Size sản phẩm')
 
-        sanpham = get_object_or_404(SanPham, ma_sp=masp)
-        sizesp = get_object_or_404(SizeSanPham, id=size_id)
+        #lấy dữ liệu size từ db.Và dùng size_obj là một instance
+        size_obj = SizeSanPham.objects.get(id=size)
 
-        giohang , created = GioHang.objects.get_or_create (nguoi_dung=user)
+        #kiểm tra giỏ hàng của người dùng có hay chưa
+        giohang, create = GioHang.objects.get_or_create(nguoi_dung=user)
 
 
-        chitiet, created = Chitietgiohang.objects.get_or_create(
-            gio_hang = giohang,
-            size_sanpham = sizesp,
-            defaults = {
-                'so_luong': soluong,
-                'don_gia':sizesp.gia_tuy_chinh or sizesp.sanpham.gia_ban
+        if action == 'add':
+            chitiet = Chitietgiohang.objects.filter(
+                gio_hang=giohang,
+                size_sanpham = size_obj,
+            )
+            if chitiet:
+                chitiet.so_luong += soluong
+                chitiet.save()
+            else:
+                Chitietgiohang.objects.create(
+                    gio_hang=giohang,
+                    size_sanpham = size_obj,
+                    so_luong = soluong,
+                    don_gia= size_obj.gia_tuy_chinh
+                )
+            messages.success(request,f"Đã thêm vào giỏ hàng")
+            return redirect('gh')
+        
+        elif action == 'buy':
+            request.session['mua_ngay'] = {
+                "masp": masp,
+                "size_id": size,
+                "soluong": soluong,
             }
-        )
 
-        if not created:
-            chitiet.so_luong += soluong
-            if chitiet.don_gia is None:
-                chitiet.don_gia = sizesp.gia_tuy_chinh
-            chitiet.save()
-
-        return redirect('gh')
-    return redirect('tc')
-
+            return redirect('tt')
+    
 
 def giohang(request):
+    user = request.user
 
-   user =request.user
-   giohang,created = GioHang.objects.get_or_create(nguoi_dung=user)
-   items = giohang.chitiet.all()
-   tong_tien = giohang.tonggiohang()
+    giohang , create = GioHang.objects.get_or_create(nguoi_dung=user)
 
-   return render(request, 'ss/giohang.html',{'items':items,'tong_tien':tong_tien})
+    chitiet_list = Chitietgiohang.objects.filter(gio_hang=giohang)
+
+    context = {
+        'ct':chitiet_list,
+        'tongtien':giohang.tongtien
+        
+    }
+    return render(request, 'ss/giohang.html',context)
+
+def xoagiohang(request, ct_id):
+    xoa = Chitietgiohang.objects.get(id=ct_id)
+    xoa.delete()
+    return redirect('gh')
 
 
-def xoagiohang(request,item_id):
-    item = Chitietgiohang.objects.get(id=item_id)
-
-    if request.method == 'POST':
-        item.delete()
-        messages.success(request,f'Đã xóa khỏi giỏ hàng')
-        return redirect('gh')
-    else:
-        messages.error(request,"Không thể xóa khỏi giỏ hàng!!")
-        return redirect('gh')
 
 
 def thanhtoan(request):
     user = request.user
-    giohang = GioHang.objects.get(nguoi_dung=user)
-    
-    if not  giohang or not giohang.chitiet.exists():
-        messages.warning(request,'Giỏ hàng bạn đang trống.Hãy chọn sản phẩm phù hợp với mình nhé')
-        return redirect('tc')
-    
-    if request.method == 'POST':
-        diachi = request.POST.get('dia_chi')
-        phuongthuc = request.POST.get('phuong_thuc','cod')
-        phiship = Decimal(30000)
-        tongtien = giohang.tonggiohang()
 
+    # ------------------------------
+    # 1. Lấy giỏ hàng người dùng
+    # ------------------------------
+    giohang = GioHang.objects.get(nguoi_dung=user)
+    ctgh = Chitietgiohang.objects.filter(gio_hang=giohang)
+
+    # ------------------------------
+    # 2. Kiểm tra nếu có mua ngay
+    # ------------------------------
+    muangay = request.session.get("mua_ngay")
+
+    sanpham_muangay = None
+    if muangay:
+        try:
+            size_obj = SizeSanPham.objects.get(id=muangay['size_id'])
+            sanpham_muangay = {
+                'size': size_obj,
+                'soluong': int(muangay['soluong']),
+                'dongia': size_obj.gia_tuy_chinh
+            }
+        except:
+            sanpham_muangay = None
+
+    # ------------------------------
+    # 3. TÍNH TỔNG TIỀN (cho GET và POST)
+    # ------------------------------
+    tongtien = giohang.tongtien
+
+    if sanpham_muangay:
+        tongtien += sanpham_muangay['dongia'] * sanpham_muangay['soluong']
+
+    # ------------------------------
+    # 4. XỬ LÝ POST (nhấn nút thanh toán)
+    # ------------------------------
+    if request.method == "POST":
+        diachi = request.POST.get("dia_chi")
+        phuongthuc = request.POST.get("phuong_thuc")
+
+        # 4.1 Tạo hóa đơn
         hoadon = Hoadon.objects.create(
             nguoidung=user,
             dia_chi=diachi,
             phuong_thuc=phuongthuc,
-            phi_ship=phiship,
-            tong_tien = tongtien,
-            
+            trang_thai='pending',
+            tong_tien=tongtien
         )
 
-        for item in giohang.chitiet.all():
+        # 4.2 Nếu thanh toán từ giỏ hàng → tạo chi tiết hóa đơn từ giỏ
+        for item in ctgh:
             Chitiethoadon.objects.create(
-                hoa_don = hoadon,
-                size_sanpham = item.size_sanpham,
-                so_luong = item.so_luong,
-                don_gia = item.don_gia,
+                hoa_don=hoadon,
+                size_sanpham=item.size_sanpham,
+                so_luong=item.so_luong,
+                don_gia=item.don_gia
             )
 
-        giohang.chitiet.all().delete()
+        # 4.3 Nếu thanh toán từ mua ngay → thêm sản phẩm mua ngay
+        if sanpham_muangay:
+            Chitiethoadon.objects.create(
+                hoa_don=hoadon,
+                size_sanpham=sanpham_muangay['size'],
+                so_luong=sanpham_muangay['soluong'],
+                don_gia=sanpham_muangay['dongia']
+            )
 
-        messages.success(request,f'Đặt hàng thành công! Mã đơn #{hoadon.id}')
-        return redirect('dh')
-    
-    tiensanpham = giohang.tonggiohang()
-    phigiaohang = Decimal(30000)
-    tongcong = tiensanpham + phigiaohang
+        # 4.4 Sau khi thanh toán → xóa dữ liệu
+        if ctgh.exists():
+            Chitietgiohang.objects.filter(gio_hang=giohang).delete()
 
-    return render(request,'ss/thanhtoan.html',{'giohang':giohang,
-                                               'tiensp':tiensanpham,
-                                               'phigh':phigiaohang,
-                                               'tongcong':tongcong})
+        if muangay:
+            del request.session['mua_ngay']
+
+        return redirect("tc")
+
+    # ------------------------------
+    # 5. RENDER GIAO DIỆN THANH TOÁN
+    # ------------------------------
+    context = {
+        'giohang': giohang,
+        'ct': ctgh,
+        'mua_ngay': sanpham_muangay,
+        'tongtien': tongtien
+    }
+
+    return render(request, 'ss/thanhtoan.html', context)
+
 
 
 def donhang(request):
     user = request.user
-    hoadon = Hoadon.objects.filter(nguoidung=user).order_by('-ngay_tao')
-    cthd = Chitiethoadon.objects.filter(hoa_don__in=hoadon).select_related('size_sanpham__sanpham')
+    list_hd = Hoadon.objects.filter(nguoidung=user).order_by('-ngay_tao')
+    chitiet_list = Chitiethoadon.objects.filter(hoa_don__in=list_hd)
 
     context = {
-        'list_hd':hoadon,
-        'ct':cthd,
-        'pending': hoadon.filter(trang_thai='pending'),
-        'confirmed':hoadon.filter(trang_thai='confirmed'),
-        'shipping': hoadon.filter(trang_thai='shipping'),
-        'delivered': hoadon.filter(trang_thai='delivered'),
-        'cancelled': hoadon.filter(trang_thai='cancelled'),
+        'list_hd':list_hd,
+        'ct':chitiet_list,
     }
-    return render(request,'ss/donhang.html',context)
+    return render (request,'ss/donhang.html',context )
 
+def xoa_donhang(request, dh_id):
+    dh = Hoadon.objects.get(id=dh_id)
 
-def huydon(request,order_id):
-    huy = Hoadon.objects.get(id=order_id,trang_thai='pending' )
-    if request.method == 'POST' or request.method == 'GET':
-        huy.trang_thai = 'cancelled'
-        huy.save()
-        messages.success(request,f'Đã hủy đơn hàng')
-        return redirect('dh')
-    
-    
+    dh.delete()
+    return redirect('dh')
+
 
 @staff_member_required
 def quantri(request):
@@ -334,9 +514,14 @@ def quantri(request):
     don_cho = Hoadon.objects.filter(trang_thai='pending').count()
     da_xac_nhan = Hoadon.objects.filter(trang_thai='confirmed').count()
     dang_giao = Hoadon.objects.filter(trang_thai='shipping').count()
-    hoan_tat = Hoadon.objects.filter(trang_thai='delivered').count()
-    doanh_thu =Hoadon.objects.filter(trang_thai='delivered').aggregate(
-    tong=Sum('tong_tien')) or 0
+    hoan_tat = Hoadon.objects.filter(trang_thai='delivered')
+    doanh_thu = 0
+    for dt in hoan_tat:
+        doanh_thu += (dt.tong_tien) + (dt.phi_ship)
+    
+    don_huy = Hoadon.objects.filter(trang_thai='cancelled').count()
+
+    nd = Nguoidung.objects.all()
 
     ds_don = Hoadon.objects.select_related('nguoidung').order_by('ngay_tao').prefetch_related('cthd__size_sanpham__sanpham')
     context = {
@@ -344,9 +529,11 @@ def quantri(request):
         'dxn':da_xac_nhan,
         'dc':don_cho,
         'dg':dang_giao,
-        'ht':hoan_tat,
-        'dt':doanh_thu['tong'] or 0,
-        'ds':ds_don
+        'ht':hoan_tat.count(),
+        'dt':doanh_thu,
+        'dh':don_huy,
+        'ds':ds_don,
+        'nd':nd
     }
     return render(request,'ss/quantri.html',context)
 
@@ -361,3 +548,36 @@ def capnhattrangthai(request, order_id):
         messages.error(request,'Trạng thái không hợp lệ')
     
     return redirect('qt')
+
+
+def quanly_dm(request):
+    all_dm=Danhmuc.objects.all()
+    
+    context = {
+        'dm':all_dm,
+        
+    }
+    return render(request,'ss/danhsach_dm.html',context)
+
+def quanly_sp(request):
+    all_sp=SanPham.objects.all()
+    
+    context = {
+        'sp':all_sp,
+    }
+    return render(request,'ss/danhsach_sp.html',context)
+
+def quanly_ncc(request):
+    all_ncc=NhaCungCap.objects.all()
+
+    context = {
+        'ncc':all_ncc
+    }
+    return render(request,'ss/danhsach_ncc.html',context)
+
+def quanly_nd(request):
+    all_nd=Nguoidung.objects.all()
+    context = {
+        'nd':all_nd
+    }
+    return render(request,'ss/danhsach_nd.html',context)

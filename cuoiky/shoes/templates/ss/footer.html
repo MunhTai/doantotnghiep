@@ -1,61 +1,77 @@
-{% load static %}
-<footer class="bg-dark text-white text-center p-3 mt-5">
-    <div class="row">
-        <div class="col-md-3">
-            <div>
-                 <div style="color: cornflowerblue;"><b>THÔNG TIN LIÊN HỆ</b></div> <br>
-                 <div class="if-ft"><img src="https://img.icons8.com/?size=100&id=7880&format=png&color=000000" alt="" class="ft-img">122/27/117/9/9 Tôn Đản - Phường 8 <br> Quận 4 -
-                Tp.HCM</div> <br> 
-                <div class="if-ft"><img src="https://cdn-icons-png.freepik.com/256/60/60462.png?ga=GA1.1.747078135.1717741449&semt=ais_hybrid" alt="" class="ft-img"> 0925 191 336</div> <br>
-                <div class="if-ft"><img src="https://cdn-icons-png.freepik.com/256/46/46951.png?ga=GA1.1.747078135.1717741449&semt=ais_hybrid" alt="" class="ft-img">       nguyenminhtai05102005@gmail.com</div> <br>
-                <div class="if-ft"><img src="https://cdn-icons-png.freepik.com/256/4408/4408451.png?ga=GA1.1.747078135.1717741449&semt=ais_hybrid" alt="" class="ft-img">   08h00 - 22h30 các ngày trong tuần</div> <br>
-                <div class="if-ft"><img src="{% static  '/images/hinhanh/congthuong.png'%} " alt="" style="max-width: 200px;"></div>
-            </div>
 
+{%load static%}
+
+<style>
+
+/* footer */
+  footer {
+    background: #8C94C9;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    margin-right: 10px;
+    text-decoration: none;
+  }
+
+  .image img {
+    height: 100px;
+    margin-top: 10px;
+  }
+
+</style>
+
+
+<footer>
+    <div style="display: flex; justify-content: space-around; text-align: left;">
+      <div style="padding: 0 2rem;">
+        <h3>Thông tin liên hệ</h3>
+        <div>
+          <p>📍 122/27 Trần Hê Thương, 3 - Quận 2, Tp.HCM</p>
+          <p>☎️ 0825 991 538</p>
+          <p>✉️ nguuonweiarch0520@gmail.com</p>
+          <p>⏰ 08h00 - 22h30 các ngày trong tuần</p>
         </div>
-
-        <div class="col-md-3 ">
-            <div class="ft-bank" >
-                <div style="color:  cornflowerblue;"><b>CHUYỂN KHOẢN ONLINE</b></div> <br>
-                <div class="if-ft">MB Bank– Ngân hàng Quân Đội Việt Nam </div> <br>
-                <div class="if-ft" >Chủ tài khoản: Nguyễn Minh Tài<br>
-                    Số tài khoản: 0925191336 </div> <br>
-                 <div class="if-ft">Xem Thêm Các TK Ngân Hàng</div> <br>
-                 <div class="if-ft">Paypal – Western Union – ATM</div>
-              </div>
+      </div>
+      <div style="padding: 0 2rem;">
+        <h3>Chuyên Khoản Online</h3>
+        <div>
+          <p>MB Bank: Nguyễn Minh Tú</p>
+          <p>Số tài khoản: 0021301538</p>
+          <p>Xem Thêm: Cầu Tây Ngôi Hùng</p>
         </div>
-
-        <div class="col-md-3">
-            <div>
-                <div style="color:  cornflowerblue;"> <b>FANPAGE</b> </div> <br>
-                <div class="if-ft">Follow Shoes Shop NMTnhé! <br> <br>
-                    <a href="https://www.facebook.com/phuongtuan1997"> <img src="{% static  '/images/hinhanh/fb.png'%}" alt="">  </a> &nbsp;   &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; <a href="https://www.tiktok.com/@lan_jee?lang=vi-VN" > <img src="{% static  '/images/hinhanh/tik.png' %}" alt=""> </a>  &nbsp;    &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; <a href="https://www.instagram.com/iamjack1997/">  <img src="{% static  '/images/hinhanh/ins.png '%}" alt=""> </a> &nbsp;
-                </div> 
-                <br>
-                 <div class="logo2" rowspan="6" ><img src="{% static  '/images/hinhanh/logo.jpg'%}" alt="" style="max-width: 300px;"></div>
-            </div>
-
+      </div>
+      <div style="padding: 0 2rem;">
+        <h3>Fanpage</h3>
+        <div>
+          <a href="#" class="icon"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" class="icon"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="icon"><i class="fa-brands fa-tiktok"></i></a>
         </div>
-
-        <div class="col-md-3">
-            <div style="color:  cornflowerblue;"> <b>6 LÝ DO CHỌN Shop Shoes NMT</b></div> <br>
-            <div class="if-ft">  <img src="https://cdn-icons-png.freepik.com/256/74/74414.png?semt=ais_hybrid" alt="" class="ft-img">   Hàng Ngàn Mẫu Có Sẵn Tại <br>Showroom 
-                </div> <br>
-            <div class="if-ft"><img src="https://cdn-icons-png.freepik.com/256/74/74414.png?semt=ais_hybrid" alt="" class="ft-img">   Giá Bán Tốt Nhất Thị Trường<br>
-                    <img src="https://cdn-icons-png.freepik.com/256/74/74414.png?semt=ais_hybrid" alt="" class="ft-img">Cam Kết 100% Chính Hãng <br> 
-                </div>
-            <div class="if-ft"> <img src="https://cdn-icons-png.freepik.com/256/74/74414.png?semt=ais_hybrid" alt="" class="ft-img">   Bảo Hành 6 tháng</div> <br>
-            <div class="if-ft"><img src="https://cdn-icons-png.freepik.com/256/74/74414.png?semt=ais_hybrid" alt="" class="ft-img">    Miễn Phí Ship Hàng Khi Mua Hàng Lần 3 <br>
-                    <img src="https://cdn-icons-png.freepik.com/256/74/74414.png?semt=ais_hybrid" alt="" class="ft-img">    Giao Hàng Nội Thành - Ngoại Thành <br> &nbsp; &nbsp; &nbsp; Siêu Tốc (Giao Hẹn Giờ & Tận Tay)
-                </div>
-
-
-        </div>
-
+        <div class="image"><img src="{% static 'images/hinhanh/logo.png'%}" alt=""></div>
+      </div>
+      <div style="padding: 0 2rem;">
+        <h3>Lý do chọn TDK SHOES</h3>
+        <ul style="padding-left: 0;">
+          <li style="list-style-type: none;">✓ Cam Kết Hàng Chính Hãng</li>
+          <li style="list-style-type: none;">✓ Giải Pháp 100% Hàng Ở Trung Tâm</li>
+          <li style="list-style-type: none;">✓ Giao Hàng Nhanh Chóng Đúng Hẹn</li>
+          <li style="list-style-type: none;">✓ Miễn Phí Ship Hàng Từ 3 Đôi</li>
+        </ul>
+      </div>
     </div>
-
-    <div class="if-ft"> 
-        <hr width="100%" size="5px" color="Green">
-        ©2018 <a href="https://giaycuhanghieu.vn/">ShopNMT.com</a>
+    <div>
+      <p>© 2025 TDK SHOES — Giày thể thao chính hãng. All rights reserved.</p>
     </div>
-</footer>
+  </footer>

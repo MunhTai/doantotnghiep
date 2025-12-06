@@ -2,28 +2,100 @@
 {% load humanize %}
 
 {% include "ss/head.html" %}
-{% include "ss/nav.html" %}
+{% include "ss/header.html" %}
 
-
+<link rel="stylesheet" href="{% static 'css/AllCSS.css'%}">
 <form method="post">
     {% csrf_token %}
-    <h3>Thông tin giao hàng</h3>
-    <input type="text" name="dia_chi" placeholder="Nhập địa chỉ nhận hàng" required>
 
-    <h3>Phương thức thanh toán</h3>
-    <label>
-        <input type="radio" name="phuong_thuc" value="cod" checked> Thanh toán khi nhận hàng
-    </label><br>
-    <label>
-        <input type="radio" name="phuong_thuc" value="online"> Thanh toán online (VNPay, Momo...)
-    </label>
+    <div class="body">
+        <div class="container-cart">
 
-    <h3>Tổng kết đơn hàng</h3>
-    <p>Tạm tính: {{ tiensp|floatformat:0|intcomma }} đ</p>
-    <p>Phí ship: {{ phigh|floatformat:0|intcomma }} đ</p>
-    <p><b>Tổng cộng: {{ tongcong|floatformat:0|intcomma }} đ</b></p>
+            <!-- LEFT -->
+            <div class="cart-left">
+                <h3>GIỎ HÀNG CỦA BẠN</h3>
 
-    <button type="submit" class="btn btn-success">Xác nhận đặt hàng</button>
+                {% if mua_ngay %}
+                <!-- Hiển thị sản phẩm MUA NGAY -->
+                <div class="cart-item">
+                    <div class="cart-warper">
+
+                        <img src="{{ mua_ngay.size.sanpham.hinh_anh.first.hinh.url }}" alt="Sản phẩm">
+
+                        <div class="cart-info">
+                            <h4>Tên: {{ mua_ngay.size.sanpham.ten_sp }}</h4>
+                            <p>Mã: {{ mua_ngay.size.sanpham.ma_sp }}</p>
+                            <p>Size: {{ mua_ngay.size.size }}</p>
+
+                            <p style="color:red; font-weight:bold; font-size:18px;">
+                                {{ mua_ngay.dongia|floatformat:0|intcomma }} đ
+                            </p>
+
+                            <div class="quantity-control">
+                                Số lượng: {{ mua_ngay.soluong }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% else %}
+                <!-- Hiển thị GIỎ HÀNG -->
+                {% for item in ct %}
+                <div class="cart-item">
+
+                    <div class="cart-warper">
+
+                        <img src="{{ item.size_sanpham.sanpham.hinh_anh.first.hinh.url }}" alt="Sản phẩm">
+
+                        <div class="cart-info">
+                            <h4>Tên: {{ item.size_sanpham.sanpham.ten_sp }}</h4>
+                            <p>Mã: {{ item.size_sanpham.sanpham.ma_sp }}</p>
+                            <p>Size: {{ item.size_sanpham.size.size }}</p>
+
+                            <p style="color:red; font-weight:bold; font-size:18px;">
+                                {{ item.size_sanpham.sanpham.gia_ban|floatformat:0|intcomma }} đ
+                            </p>
+
+                            <div class="quantity-control">
+                                Số lượng: {{ item.so_luong }}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                {% empty %}
+                <p style="text-align:center; font-weight:bold; margin-top:20px;">
+                    Giỏ hàng trống
+                </p>
+                {% endfor %}
+                {% endif %}
+
+                <p>* Kiểm hàng trước khi nhận.</p>
+                <p>* Nội thành: 1–3 ngày / Ngoại thành: 3–4 ngày.</p>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="checkout-right" style="width:40%;">
+                <h3>Thông tin giao hàng</h3>
+
+                <input type="text" name="dia_chi" placeholder="Nhập địa chỉ nhận hàng" required>
+
+                <h3>Phương thức thanh toán</h3>
+                <label><input type="radio" name="phuong_thuc" value="cod" checked> Thanh toán khi nhận hàng</label><br>
+                <label><input type="radio" name="phuong_thuc" value="online"> Thanh toán online</label>
+
+                <h3>Tổng kết đơn hàng</h3>
+                <p>Tạm tính: {{ tongtien|floatformat:0|intcomma }} đ</p>
+                <p>Phí ship: 0đ</p>
+                <p><b>Tổng cộng: {{ tongtien|floatformat:0|intcomma }} đ</b></p>
+
+                <button type="submit">Xác nhận đặt hàng</button>
+            </div>
+
+        </div>
+    </div>
+
 </form>
 
-{% include "ss/footer.html" %}
+{% include 'ss/footer.html'%}

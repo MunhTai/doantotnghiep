@@ -11,56 +11,69 @@
 {% include "ss/hang.html" %}
 
 {% include "ss/section.html" %}
+{% comment %} 
+<style> 
+.image img {
+    height: 100px;
+    margin-top: 10px;
+  }
 
+  /* product */
+  .section2 {
+    padding: 2rem;
+    margin: 1rem 0;
+    text-align: center;
+  }
 
-<hr style="width: 80%; margin-left: 145px; border: 3px solid green; margin-top: 40px;">
+  .Products-sale {
+    border: 1px solid gray;
+    padding: 20px 20px;
+    border-radius: 5px;
+    text-align: center;
+    transition: transform 0.5s, box-shadow 0.5s, border-color 0.5s;
+  }
 
-<main style="    max-width: 70%;
-    margin-left: 230px;">
-<article class="container mt-5">
-    <h1> Các Thương Hiệu</h1>
-     {% for h in hang %}
-        <div class="brand">
-          <a href = "{% url 'cth' h.id %}">{{h.ten_ncc}} </a>
+  .Products-sale:hover {
+    border: 1px solid black;
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(31, 41, 55, 0.12);
+    border-color: rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition: transform 0.5s, box-shadow 0.5s, border-color 0.5s;
+  }
+
+  .Products-sale:active {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 8px 20px rgba(31, 41, 55, 0.10);
+  }
+
+  
+</style> {% endcomment %}
+
+<hr style="width: 80%; margin-left: 145px; border: 3px solid #3F4B97; margin-top: 40px;">
+
+<section class="section2">
+    <h2>Sản phẩm giảm giá</h2> <br>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
+      <div class="warper" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+        {%for s in giamgia%}
+        <div class="Products-sale">
+          
+          <div>
+            {%if s.hinh_anh.all%}
+            <div class="image img"><img src="{{s.hinh_anh.first.hinh.url}}"></div>
+           {%endif%}
+          </div>  
+          <h3><a href="{%url 'ct' s.ma_sp %}" style ='color: black;
+    text-decoration: none;'> {{s.ten_sp}} </a></h3>
+          <p>{{s.mo_ta}}</p>
+          <div ><s>{{s.gia| floatformat:0 | intcomma}}đ</s> <strong>{{ s.gia | floatformat:0 | intcomma  }}đ</strong></div>
         </div>
-     {% endfor%}
+        {% endfor %}
+       
 
-
-    {%if giamgia%}
-
-    <h1> Các sản phẩm giảm giá </h1>
-  <div class="row">
-    {% for g in giamgia%}
-    <div class="col-md-4 mb-4">
-      <div class="card h-100 shadow-sm rounded">
-        {% if g.hinh_anh.all %}
-          <img src="{{g.hinh_anh.first.hinh.url}}" class="card-img-top img-fluidsp">
-        {%endif%}
-        <div class="card-body text-center">
-          <h5 class="card-title fw-bold text-dark"><a href="{% url 'ct' g.ma_sp%}" class="link">{{ g.ten_sp }}</a></h5>
-          <p class="text-danger fw-semibold mb-2"><s>{{g.gia|floatformat:0|intcomma}}</s> {{ g.gia_ban|floatformat:0|intcomma }} VND</p>
-
-        </div>
-      </div>
     </div>
-    {%endfor%}
-  </div>
-  {%else%}
-  
-  {%endif%}
-    
-     
-
-
-  
-   
-  
-
-  
-    
-</article>
-
-</main>
+  </section>
     
 </body>
 

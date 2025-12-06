@@ -5,15 +5,25 @@ from django.utils.text import slugify
 from decimal import Decimal
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
+from django.db.models import Max
 # Create your models here.
 
 # custom user(mở rộng)
 class Nguoidung(AbstractUser):
-    phone = models.CharField("Số điện thoại", max_length=20, blank=True, null=True, unique=False)
+    email = models.EmailField("email", max_length=254,unique=True)
+    phone = models.CharField("Số điện thoại", max_length=20, blank=True, null=True, unique=True)
     address = models.TextField("Địa chỉ", blank=True)
 
     def __str__(self):
         return self.get_username()
+    
+class Otp(models.Model):
+    user = models.ForeignKey(Nguoidung,on_delete=models.CASCADE)
+    code = models.CharField(max_length=6)
+    create = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.code}"
     
 #Bảng Danh Mục
 class Danhmuc(models.Model):
@@ -56,7 +66,7 @@ class SanPham(models.Model):
     gia = models.DecimalField("Giá gốc", max_digits=12, decimal_places=2)
     giam_gia = models.DecimalField("Giá khuyến mãi", max_digits=12, decimal_places=2, null=True, blank=True)
     is_active = models.BooleanField(default=True)
-    khoi_tao = models.DateTimeField(auto_now_add=True,null=False)
+    khoi_tao = models.DateTimeField(auto_now_add=True,null=True)
 
     class Meta:
         verbose_name_plural = "Sản phẩm"
@@ -87,9 +97,18 @@ class SanPham(models.Model):
             else:
                 prefix = self.ten_sp[:4].upper()
 
-        #đếm mã cộng dồn
-            count = SanPham.objects.filter(ma_sp__startswith=prefix).count() +1
+            max= (
+                SanPham.objects.filter(ma_sp__startswith = prefix)
+                .aggregate(max_code=Max('ma_sp'))
+            )
+            max_none = max['max_code']
 
+        #đếm mã cộng dồn
+            if max_none is None:
+                count =1
+                
+            else:
+                count = int(max_none[len(prefix):]) +1
             self.ma_sp = f"{prefix}{count:03d}"
         #----------------------------#
 
@@ -172,9 +191,10 @@ class GioHang(models.Model):
     def __str__(self):
         return f"Giỏ Hàng {self.id} (Người Dùng={self.nguoi_dung})"
     
-    def tonggiohang(self):
-        return sum(item.tongtien() for item in self.chitiet.all())
     
+    @property
+    def tongtien(request):
+        return sum([item.thanhtien for item in request.chitiet.all()])
 
 class Chitietgiohang(models.Model):
     gio_hang = models.ForeignKey(GioHang, on_delete=models.CASCADE, related_name="chitiet")
@@ -187,9 +207,10 @@ class Chitietgiohang(models.Model):
         unique_together = ("gio_hang", "size_sanpham")
 
 
-    def tongtien(self):
-        don_gia = self.don_gia or self.size_sanpham.gia_tuy_chinh  
-        return don_gia* self.so_luong
+    @property
+    def thanhtien(self):
+        return self.so_luong*self.don_gia
+
     
 
 class Hoadon(models.Model):

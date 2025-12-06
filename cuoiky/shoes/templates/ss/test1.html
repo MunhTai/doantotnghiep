@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TDK SHOES - Giày thể thao chính hãng</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+<style>
+  header {
+    background: linear-gradient(to right, #DFE4FF, #8C94C9, #3F4B97);
+    color: black;
+    padding: 1rem 2rem;
+    display: flex;
+  }
+
+  nav {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  nav a {
+    color: rgb(41, 200, 249);
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0 2rem;
+    transition: 0.3s;
+  }
+
+  nav a:hover {
+    color: white;
+    transition: 0.3s;
+  }
+
+  /* đảm bảo wrapper của SHOP có position để .list căn đúng */
+  nav>div {
+    position: relative;
+  }
+
+  /* ẩn .list mặc định */
+  .list {
+    display: block;
+    /* cần để position: absolute hoạt động */
+    position: absolute;
+    top: 100%;
+    left: 30px;
+    background: rgba(163, 163, 163, 0.95);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px 0;
+    min-width: 180px;
+    z-index: 100;
+
+    /* hiệu ứng: bắt đầu ẩn, hơi dịch lên trên và nhỏ hơn */
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+    visibility: hidden;
+    pointer-events: none;
+    /* không nhận sự kiện khi ẩn */
+    transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+  }
+
+  /* hiển thị khi hover vào wrapper (SHOP) hoặc khi có class .active từ JS */
+  nav>div:hover .list,
+  .list.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+
+  .shop-btn:hover .list,
+  .shop-btn .list:hover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .option {
+    display: block;
+    padding: 8px 20px;
+    color: black;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .option:hover {
+    background: #8C94C9;
+    color: white;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .section1 {
+    background-color: #FFFFFF;
+    padding: 2rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    display: flex;
+  }
+
+  .introduction {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 30%;
+  }
+
+  .introduction a button {
+    font-size: 15px;
+    background-color: #8C94C9;
+    color: white;
+    padding: 20px 30px;
+    border: none;
+    border-radius: 35px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.4s;
+  }
+
+  .introduction a button:hover {
+    background-color: #3F4B97;
+    transition: background-color 0.4s;
+  }
+
+  .banners-parent {
+    position: relative;
+    width: 1024px;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  .banners {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    height: 100%;
+  }
+
+  .banners img {
+    width: 1024px;
+    height: 300px;
+    flex: 0 0 1024px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .banner-btn-left,
+  .banner-btn-right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10;
+    padding: 10px;
+    font-size: 25px;
+    transition: background 0.3s;
+  }
+
+  .banner-btn-left:hover,
+  .banner-btn-right:hover {
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  .banner-btn-left {
+    left: 10px;
+  }
+
+  .banner-btn-right {
+    right: 10px;
+  }
+
+  .Features {
+    text-align: center;
+    padding: 1rem;
+    display: flex;
+  }
+
+  /* product */
+  .section2 {
+    padding: 2rem;
+    margin: 1rem 0;
+    text-align: center;
+  }
+
+  .Products-sale {
+    border: 1px solid gray;
+    padding: 20px 20px;
+    border-radius: 5px;
+    text-align: center;
+    transition: transform 0.5s, box-shadow 0.5s, border-color 0.5s;
+  }
+
+  .Products-sale:hover {
+    border: 1px solid black;
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(31, 41, 55, 0.12);
+    border-color: rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition: transform 0.5s, box-shadow 0.5s, border-color 0.5s;
+  }
+
+  .Products-sale:active {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 8px 20px rgba(31, 41, 55, 0.10);
+  }
+
+  /* footer */
+  footer {
+    background: #8C94C9;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    margin-right: 10px;
+    text-decoration: none;
+  }
+
+  .image img {
+    height: 100px;
+    margin-top: 10px;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const banners = document.querySelector('.banners');
+    const bannerImages = document.querySelectorAll('.banners img');
+    const btnLeft = document.querySelector('.banner-btn-left');
+    const btnRight = document.querySelector('.banner-btn-right');
+
+    let currentIndex = 0;
+    const totalBanners = bannerImages.length;
+    const bannerWidth = 1024; // phải khớp CSS width
+
+    function showBanner(index) {
+      if (index < 0) {
+        currentIndex = totalBanners - 1;
+      } else if (index >= totalBanners) {
+        currentIndex = 0;
+      } else {
+        currentIndex = index;
+      }
+
+      const offset = -currentIndex * bannerWidth;
+      banners.style.transform = `translateX(${offset}px)`;
+    }
+
+    // Nút trái
+    btnLeft.addEventListener('click', function () {
+      showBanner(currentIndex - 1);
+    });
+
+    // Nút phải
+    btnRight.addEventListener('click', function () {
+      showBanner(currentIndex + 1);
+    });
+
+    // Tự động chuyển banner mỗi 5 giây
+    setInterval(function () {
+      showBanner(currentIndex + 1);
+    }, 5000);
+  });
+</script>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+      <div>
+        <img src="logo.png" alt="" style="height: 150px;" />
+      </div>
+      <nav>
+        <a href="#">HOME</a>
+        <div>
+          <a href="#" class="shop-btn">
+            SHOP <i class="fa-solid fa-angles-down"></i>
+          </a>
+          <div class="list">
+            <a href="#" class="option">GIÀY Adidas</a>
+            <a href="#" class="option">GIÀY Jordan</a>
+            <a href="#" class="option">GIÀY Puma</a>
+          </div>
+        </div>
+          <a href="signup.html">SIGN UP</a>
+          <a href="login.html">LOG IN</a>
+          <a href="#">
+            <i class="fa-solid fa-cart-shopping"></i>
+          </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="section1">
+    <!-- Left Content -->
+    <div class="introduction">
+      <h1>Chào mừng bạn đến với</h1>
+      <h2>TDK SHOES</h2>
+      <a>
+        <button>
+          SHOP NOW
+        </button>
+      </a>
+    </div>
+
+    <!-- Right Banner -->
+    <div>
+      <div class="banners-parent">
+        <button class="banner-btn-left">
+          <i class="fa-solid fa-caret-left"></i>
+        </button>
+        <div class="banners">
+          <img src="banner1.png" alt="Banner 1">
+          <img src="banner2.png" alt="Banner 2">
+          <img src="banner3.png" alt="Banner 3">
+        </div>
+        <button class="banner-btn-right">
+          <i class="fa-solid fa-caret-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section>
+    <div>
+      <div style="display: flex; justify-content: space-around; align-items: center;">
+        <div class="Features">
+          <div><img src="camket.png" alt=""></div>
+          <h3>Cảm kết chất lượng</h3>
+        </div>
+        <div class="Features">
+          <div><img src="hotro.png" alt=""></div>
+          <h3>Hỗ trợ bảo hành</h3>
+        </div>
+        <div class="Features">
+          <div><img src="thanhtoan.png" alt=""></div>
+          <h3>Thanh toán đa dạng</h3>
+        </div>
+        <div class="Features">
+          <div><img src="giaohang.png" alt=""></div>
+          <h3>Giao hàng nhanh chóng</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Sale Section -->
+  <section class="section2">
+    <h2>Sản phẩm giảm giá</h2>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
+      <div class="warper" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+        <div class="Products-sale">
+          <div>
+            <div class="image-product">👟</div>
+          </div>
+          <h3>Giày Thể Thao Nike Air</h3>
+          <p>Thiết kế hiện đại, thoải mái</p>
+          <div><span>1.750.000</span><span>1.500.000 VNĐ</span></div>
+        </div>
+        <div class="Products-sale">
+          <div>
+            <div class="image-product">👟</div>
+          </div>
+          <h3>Giày Thể Thao Nike Air</h3>
+          <p>Thiết kế hiện đại, thoải mái</p>
+          <div><span>1.750.000</span><span>1.500.000 VNĐ</span></div>
+        </div>
+        <div class="Products-sale">
+          <div>
+            <div class="image-product">👟</div>
+          </div>
+          <h3>Giày Thể Thao Nike Air</h3>
+          <p>Thiết kế hiện đại, thoải mái</p>
+          <div><span>1.750.000</span><span>1.500.000 VNĐ</span></div>
+        </div>
+        <div class="Products-sale">
+          <div>
+            <div class="image-product">👟</div>
+          </div>
+          <h3>Giày Thể Thao Nike Air</h3>
+          <p>Thiết kế hiện đại, thoải mái</p>
+          <div><span>1.750.000</span><span>1.500.000 VNĐ</span></div>
+        </div>
+        <div class="Products-sale">
+          <div>
+            <div class="image-product">👟</div>
+          </div>
+          <h3>Giày Thể Thao Nike Air</h3>
+          <p>Thiết kế hiện đại, thoải mái</p>
+          <div><span>1.750.000</span><span>1.500.000 VNĐ</span></div>
+        </div>
+        <div class="Products-sale">
+          <div>
+            <div class="image-product">👟</div>
+          </div>
+          <h3>Giày Thể Thao Nike Air</h3>
+          <p>Thiết kế hiện đại, thoải mái</p>
+          <div><span>1.750.000</span><span>1.500.000 VNĐ</span></div>
+        </div>
+        <div class="Products-sale">
+          <div>
+            <div class="image-product">👟</div>
+          </div>
+          <h3>Giày Thể Thao Nike Air</h3>
+          <p>Thiết kế hiện đại, thoải mái</p>
+          <div><span>1.750.000</span><span>1.500.000 VNĐ</span></div>
+        </div>
+        <div class="Products-sale">
+          <div>
+            <div class="image-product">👟</div>
+          </div>
+          <h3>Giày Thể Thao Nike Air</h3>
+          <p>Thiết kế hiện đại, thoải mái</p>
+          <div><span>1.750.000</span><span>1.500.000 VNĐ</span></div>
+        </div>
+        <div class="Products-sale">
+          <div>
+            <div class="image-product">👟</div>
+          </div>
+          <h3>Giày Thể Thao Nike Air</h3>
+          <p>Thiết kế hiện đại, thoải mái</p>
+          <div><span>1.750.000</span><span>1.500.000 VNĐ</span></div>
+        </div>
+        <div class="Products-sale">
+          <div>
+            <div class="image-product">👟</div>
+          </div>
+          <h3>Giày Thể Thao Nike Air</h3>
+          <p>Thiết kế hiện đại, thoải mái</p>
+          <div><span>1.750.000</span><span>1.500.000 VNĐ</span></div>
+        </div>
+        <div class="Products-sale">
+          <div>
+            <div class="image-product">👟</div>
+          </div>
+          <h3>Giày Thể Thao Nike Air</h3>
+          <p>Thiết kế hiện đại, thoải mái</p>
+          <div><span>1.750.000</span><span>1.500.000 VNĐ</span></div>
+        </div>
+        <div class="Products-sale">
+          <div>
+            <div class="image-product">👟</div>
+          </div>
+          <h3>Giày Thể Thao Nike Air</h3>
+          <p>Thiết kế hiện đại, thoải mái</p>
+          <div><span>1.750.000</span><span>1.500.000 VNĐ</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div style="display: flex; justify-content: space-around; text-align: left;">
+      <div style="padding: 0 2rem;">
+        <h3>Thông tin liên hệ</h3>
+        <div>
+          <p>📍 122/27 Trần Hê Thương, 3 - Quận 2, Tp.HCM</p>
+          <p>☎️ 0825 991 538</p>
+          <p>✉️ nguuonweiarch0520@gmail.com</p>
+          <p>⏰ 08h00 - 22h30 các ngày trong tuần</p>
+        </div>
+      </div>
+      <div style="padding: 0 2rem;">
+        <h3>Chuyên Khoản Online</h3>
+        <div>
+          <p>MB Bank: Nguyễn Minh Tú</p>
+          <p>Số tài khoản: 0021301538</p>
+          <p>Xem Thêm: Cầu Tây Ngôi Hùng</p>
+        </div>
+      </div>
+      <div style="padding: 0 2rem;">
+        <h3>Fanpage</h3>
+        <div>
+          <a href="#" class="icon"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" class="icon"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="icon"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+        <div class="image"><img src="logo.png" alt=""></div>
+      </div>
+      <div style="padding: 0 2rem;">
+        <h3>Lý do chọn TDK SHOES</h3>
+        <ul style="padding-left: 0;">
+          <li style="list-style-type: none;">✓ Cam Kết Hàng Chính Hãng</li>
+          <li style="list-style-type: none;">✓ Giải Pháp 100% Hàng Ở Trung Tâm</li>
+          <li style="list-style-type: none;">✓ Giao Hàng Nhanh Chóng Đúng Hẹn</li>
+          <li style="list-style-type: none;">✓ Miễn Phí Ship Hàng Từ 3 Đôi</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <p>© 2025 TDK SHOES — Giày thể thao chính hãng. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+
+</html>

@@ -1,25 +1,32 @@
 {%load static%}
 
-{% include 'ss/head.html'%}
+ <link rel="stylesheet" href="{% static 'css/signup-login.css'%}">
 
-{% include 'ss/nav.html'%}
+{% include 'ss/header.html'%}
 
-
-
-<section class="thongtin">
-            <form class="register-form" method="post">
-                <fieldset>
-                    
-                        
-                             {% csrf_token%}
-                            <legend>Đăng ký</legend>
-                            {{ form.as_p}}
-                    
-                        <button type="submit" class='tao' >Đăng ký</button>
-                    
-                </fieldset>
-                <a href=" "> Đã có tài khoản? Đăng nhập </a>
-            </form>
-           
-            </section>
              
+
+<body>
+<div >
+        <div class="background"></div>
+        <div class="container">
+            <form class="glass-card" action="/register" method="POST">
+                <h2>Register</h2>
+                <p>Please fill in this form to create an account</p>
+                <label for="username">Username</label>
+                <input type="text" name='username' id="username" placeholder="Username" required />
+
+                <label for="email">Email</label>
+                <input type="email" name='email' id="email" placeholder="you@gmail.com" required>
+
+                <label for="password">Password</label>
+                <input type="password" name='password' id="password" placeholder="********" required>
+
+                <button type="submit">Register</button>
+                <div >
+                    <p >Already have an account? <a href="{% url 'dn' %}">Login</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>

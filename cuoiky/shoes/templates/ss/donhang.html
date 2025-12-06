@@ -6,58 +6,69 @@
 {% include "ss/header.html" %}
 {%include "ss/nav.html" %}
 
-<div class="container py-5">
-    <h2 class="mb-4">Tổng hợp đơn hàng</h2>
 
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
-        Đang chờ xử lý
-      </button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link " id="processed-tab" data-bs-toggle="tab" data-bs-target="#confirmed" type="button" role="tab">
-        Đã xử lý
-      </button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping" type="button" role="tab">
-        Đang giao hàng
-      </button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="delivered-tab" data-bs-toggle="tab" data-bs-target="#delivered" type="button" role="tab">
-        Đã giao
-      </button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="cancelled-tab" data-bs-toggle="tab" data-bs-target="#cancelled" type="button" role="tab">
-        Đã hủy
-      </button>
-    </li>
-  </ul>
+<body>
+   
+    <div class="body">
+         <h1 class="mb-4">Tổng hợp đơn hàng</h1>
+        <div class="container py-5">
 
-  <div class="tab-content mt-4">
-    <div class="tab-pane fade show active" id="pending" role="tabpanel">
-         {% include "ss/donhang_tab.html" with list_hd=list_hd trangthai="pending" %}
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending"
+                        type="button" role="tab">
+                        Đang chờ xử lý
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link " id="processed-tab" data-bs-toggle="tab" data-bs-target="#confirmed"
+                        type="button" role="tab">
+                        Đã xử lý
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping"
+                        type="button" role="tab">
+                        Đang giao hàng
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="delivered-tab" data-bs-toggle="tab" data-bs-target="#delivered"
+                        type="button" role="tab">
+                        Đã giao
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="cancelled-tab" data-bs-toggle="tab" data-bs-target="#cancelled"
+                        type="button" role="tab">
+                        Đã hủy
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content mt-4">
+                <div class="tab-pane fade show active" id="pending" role="tabpanel">
+                    {% include "ss/donhang_tab.html" with list_hd=list_hd trangthai="pending" %}
+                </div>
+
+                <div class="tab-pane fade " id="confirmed" role="tabpanel">
+                    {% include "ss/donhang_tab.html" with list_hd=list_hd trangthai="confirmed" %}
+                </div>
+
+                <div class="tab-pane fade " id="shipping" role="tabpanel">
+                    {% include "ss/donhang_tab.html" with list_hd=list_hd trangthai="shipping" %}
+                </div>
+
+                <div class="tab-pane fade " id="delivered" role="tabpanel">
+                    {% include "ss/donhang_tab.html" with list_hd=list_hd trangthai="delivered" %}
+                </div>
+
+                <div class="tab-pane fade " id="cancelled" role="tabpanel">
+                    {% include "ss/donhang_tab.html" with list_hd=list_hd trangthai="cancelled" %}
+                </div>
+            </div>
+
+
+        </div>
     </div>
-
-    <div class="tab-pane fade " id="confirmed" role="tabpanel">
-         {% include "ss/donhang_tab.html" with list_hd=list_hd trangthai="confirmed" %}
-    </div>
-
-    <div class="tab-pane fade " id="shipping" role="tabpanel">
-         {% include "ss/donhang_tab.html" with list_hd=list_hd trangthai="shipping" %}
-    </div>
-
-    <div class="tab-pane fade " id="delivered" role="tabpanel">
-         {% include "ss/donhang_tab.html" with list_hd=list_hd trangthai="delivered" %}
-    </div>
-
-    <div class="tab-pane fade " id="cancelled" role="tabpanel">
-         {% include "ss/donhang_tab.html" with list_hd=list_hd trangthai="cancelled" %}
-    </div>
-  </div>
-
-    
-</div>
+</body>

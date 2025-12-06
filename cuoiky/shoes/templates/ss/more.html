@@ -1,0 +1,112 @@
+{% include "ss/header.html" %}
+
+{% include "ss/head.html" %}
+ 
+{%load humanize%}
+
+<style> 
+    body {
+        background: #F3F4FF;
+        margin: 0;
+        padding: 2rem;
+        font-family: Arial, sans-serif;
+    }
+
+    .category-box {
+        margin-bottom: 60px;
+    }
+
+    .category-title {
+        font-size: 22px;
+        padding: 12px 20px;
+        text-transform: uppercase;
+        border: 2px solid gray;
+        width: 40%;
+        margin: 0 auto 30px auto;
+        border-radius: 30px;
+        text-align: center;
+        font-weight: bold;
+        background: white;
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+    }
+
+    .product-card {
+        background: white;
+        border: 1px solid gray;
+        border-radius: 5px;
+        padding: 15px;
+        text-align: center;
+        transition: 0.3s;
+    }
+
+    .product-card:hover {
+        transform: translateY(-6px);
+        border-color: black;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        cursor: pointer;
+    }
+
+    .product-image img {
+        width: 100%;
+        max-height: 160px;
+        object-fit: contain;
+        display: block;
+        margin: auto;
+        margin-bottom: 10px;
+    }
+
+    .product-card h3 {
+        font-size: 16px;
+        margin: 8px 0;
+    }
+
+    .product-card p {
+        color: #555;
+        font-size: 14px;
+    }
+    .link {
+        text-decoration : none;
+        color:black
+    }
+</style>
+
+
+<body> 
+    <br>
+<div class="category-box">
+        <h2 class="category-title">{{ dm.ten_dm }} {{ncc.ten_ncc}}</h2>
+
+        <div class="product-grid">
+            {% for m in more %}
+            <div class="product-card">
+
+                <div class="product-image">
+                    <img src="{{ m.hinh_anh.first.hinh.url }}" alt="">
+                </div>
+
+                <h3><a href="{% url 'ct' m.ma_sp%}" class="link">{{ m.ten_sp }}</a></h3>
+                <p>{{ m.mo_ta|truncatechars:50 }}</p>
+
+                <div>
+                    {% if m.giam_gia %}
+                        <s>{{ m.giam_gia | floatformat:0 | intcomma }}đ</s>  
+                        <strong>{{ m.gia | floatformat:0 | intcomma }}đ</strong>
+                    {% else %}
+                        <strong>{{ m.gia | floatformat:0 | intcomma  }}đ</strong>
+                    {% endif %}
+                </div>
+
+            </div>
+                
+            {% endfor %}
+        </div>
+
+            
+    </div>
+
+</body>

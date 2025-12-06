@@ -1,14 +1,82 @@
-{% load static %}
 
-<div class="container mt-5 " >
-  <div class="row">
-    <div class="col-sm-6 " >
-      <h1>Chào mừng bạn đến với NMT Shop</h1>
-                <p>Nơi đây có thể sẽ là thiên đường mua sắm của bạn</p>
-                <button class="btn btn-primary" ><a href="{% url 'gt' %}" style="color:white">Tìm hiểu </a>  </button>
+{% load static%}
+
+
+{%include 'ss/head.html'%}
+
+<header>
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+      <div>
+        <img src="{% static 'images/hinhanh/logo.png'%}" alt="" style="height: 150px;" />
+      </div>
+      <nav>
+        <a href="{% url 'tc'%}">HOME</a>
+        
+        <div>
+              <a class="shop-btn">
+                SHOP <i class="fa-solid fa-angles-down"></i>
+              </a>
+          <div class="list">
+            {%for h in hang %}
+                <a href="{% url 'cth' h.id%}" >{{h.ten_ncc}}</a>
+            {%endfor%}
+        
+          </div>
+        
+        
+        </div>
+        {%if not user.is_authenticated%}
+        {%if request.resolver_match.url_name == 'dn'%}
+          <a href="{% url 'dk'%}">SIGN UP</a>
+        {%elif request.resolver_match.url_name == 'dk' %}
+          <a href="{% url 'dn'%}">LOG IN</a>
+        {%else%}
+            <a href="{% url 'dk'%}">SIGN UP</a>
+            <a href="{% url 'dn'%}">LOG IN</a>
+        {%endif%}
+        {%endif%}
+        {%if user.is_authenticated%}
+            {%if user.is_staff%}
+              <li class="nav-item me-2">
+                <span class="shop-btn">👤 Xin chào, <b>{{user.username}}</b></span>
+              </li>
+
+              <li class="nav-item me-2">
+                <a href = {% url 'qt' %} class="shop-btn"> 📊 <b>Dashboard</b></a> 
+              </li>
+
+              <li class="nav-item me-2">
+                <a href="{% url 'dx'%}">
+                <span class="navbar-text">Đăng xuất</b></span>
+                </a>
+              </li>
+            {%else%}
+                <li class="nav-item me-2">
+                    <span class="navbar-text">👤 Xin chào, <b>{{user.username}}</b></span>
+                </li>
+
+              <a href="{% url 'gh'%}">
+    <div id="cart-icon" style="position: relative; display: inline-block;">
+        <i class="fa-solid fa-cart-shopping" style="font-size: 26px;"></i>
+
+        <!-- Số lượng giỏ -->
+        <span id="cart-count"
+              style="position:absolute; top:-8px; right:-10px;
+                     background:red; color:white; 
+                     padding:2px 6px; font-size:12px;
+                     border-radius:50%; font-weight:bold;">
+            0
+        </span>
     </div>
-    <div class="col-sm-6">
-       <img src="{% static 'images/hinhanh/logo.jpg' %}" alt="" class="img-fluid">
+</a>
+              <a href="{% url 'dh'%}">
+                <i class="fa-solid fa-cart-shopping" >Đơn hàng</i>
+              </a>
+              <a href="{% url 'dx' %}" >
+                  <span class="navbar-text">Đăng xuất</b></span>
+              </a>
+            {%endif%}
+        {%endif%}
+      </nav>
     </div>
-  </div>
-</div>
+  </header>

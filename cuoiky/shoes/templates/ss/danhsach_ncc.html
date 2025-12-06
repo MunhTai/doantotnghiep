@@ -1,0 +1,47 @@
+{% load static %}
+{% load humanize %}
+
+{% include 'ss/head.html' %}
+
+{% comment %} <div class="container">
+
+    <h2>Tất cả nhà cung cấp</h2>
+    <div class="category-list">
+        {% for n in ncc %}
+            <div class="category-item">
+                {{ n.ten_ncc}}
+            </div>
+        {% empty %}
+            <p>Không có nhà cung cấp nào.</p>
+        {% endfor %}
+    </div>
+   
+                <li><a href="{% url 'tncc'%}"><i class="bi bi-truck"></i> <span>+ Thêm Nhà Cung Cấp</span></a></li>
+</div> {% endcomment %}
+
+<div class="container">
+
+    <h2>Tất cả nhà cung cấp</h2>
+           <div class="card shadow-sm">
+                <div class="card-body">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Tên Nhà Cung Cấp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for n in ncc %}
+                            
+                            <tr>
+                                <td> {{n.ten_ncc}} </td>
+                            </tr>
+                            {%endfor%}
+                    
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    <li><a href="{% url 'tncc'%}"><i class="bi bi-folder-plus"></i> <span>+ Thêm Nhà Cung Cấp</span></a></li>
+</div>
