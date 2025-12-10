@@ -4,19 +4,17 @@
 {% include 'ss/head.html'%}
 
 {% include 'ss/header.html'%}
-{% include 'ss/nav.html'%}
 
-{% include 'ss/hang.html'%}
-{% include 'ss/section.html'%}
 
-<hr style="width: 80%; margin-left: 145px; border: 3px solid green; margin-top: 40px;">
-<main style="    max-width: 70%;
-    margin-left: 230px;">
+
 <article class="container mt-5">
 
+
  
-  <div class="row">
+  {% comment %} <div class="row">
+    
     {%for s in kq %}
+    
     <div class="col-md-4 mb-4">
       <div class="card h-100 shadow-sm rounded">
         {% if s.hinh_anh.all %}
@@ -37,6 +35,28 @@
       
     {%endfor%}
    
-  </div>
+  </div> {% endcomment %}
+
+  <h1> Kết quả: {{tukhoa}} </h1>
+  <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
+    
+      <div class="warper" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+        
+        {%for s in kq%}
+        <div class="Products-sale">
+          
+          <div>
+            {%if s.hinh_anh.all%}
+            <div class="image img"><img src="{{s.hinh_anh.first.hinh.url}}"></div>
+           {%endif%}
+          </div>  
+          <h3><a href="{%url 'ct' s.ma_sp %}" style ='color: black;
+    text-decoration: none;'> {{s.ten_sp}} </a></h3>
+          <p>{{s.mo_ta}}</p>
+          <div ><s>{{s.gia| floatformat:0 | intcomma}}đ</s> <strong>{{ s.gia | floatformat:0 | intcomma  }}đ</strong></div>
+        </div>
+        {% endfor %}
+       
+
+    </div>
 </article>
-</main>

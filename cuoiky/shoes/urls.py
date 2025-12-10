@@ -18,6 +18,7 @@ urlpatterns = [
     path('themnhacungcap/',views.themncc,name='tncc'),
     
     path('xoasanpham/<str:masp>/',views.xoasp,name='x'),
+    path('suasanpham/<str:masp>/',views.suasp,name='s'),
     path('themvaogio/',views.themvaogio,name='tvg'),
     path('giohang/',views.giohang,name='gh'),
     path('xoagiohang/<int:ct_id>/',views.xoagiohang,name='xgh'),
@@ -31,4 +32,9 @@ urlpatterns = [
     path('quanlysanpham/',views.quanly_sp,name='qlsp'),
     path('quanlynhacungcap/',views.quanly_ncc,name='qlncc'),
     path('quanlynguoidung/',views.quanly_nd,name='qlnd'),
+
+    path('xoadanhmuc/<int:dm_xoa>',views.xoa_dm,name='xdm'),
+    path('xoanhacungcap/<int:ncc_xoa>',views.xoa_ncc,name='xncc'),
+     path('xoadanhmuc/<int:dm_xoa>',views.xoa_dm,name='xdm'),
+    path('xoanguoidung/<int:nd_xoa>',views.xoa_nd,name='xnd'),
 ]

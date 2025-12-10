@@ -5,11 +5,18 @@
 {%include 'ss/head.html'%}
 
 <header>
-    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; list-style:none;">
       <div>
         <img src="{% static 'images/hinhanh/logo.png'%}" alt="" style="height: 150px;" />
       </div>
       <nav>
+       <div class="header-search">
+    <form action="{% url 'tk' %}" method="GET">
+        <input class="search-input" name='q'type="text" placeholder="Tìm kiếm...">
+        <button class="search-btn" type="submit"><i class="fa fa-search"></i></button>
+    </form>
+</div>
+
         <a href="{% url 'tc'%}">HOME</a>
         
         <div>

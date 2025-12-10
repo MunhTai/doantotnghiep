@@ -2,7 +2,8 @@
 {% load humanize %}
 
 {% include 'ss/head.html' %}
-
+{% include "ss/header.html" %}
+<br>
 <div class="container">
 
     <h2>Tất cả danh mục</h2>
@@ -18,7 +19,13 @@
                             {% for d in dm %}
                             
                             <tr>
-                                <td> {{d.ten_dm}} </td>
+                                <td class="d-flex justify-content-between align-items-center">
+                                        {{ d.ten_dm }}
+
+                                    <a href="{% url 'xdm' d.id %}" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
                             </tr>
                             {%endfor%}
                     

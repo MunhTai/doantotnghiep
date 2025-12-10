@@ -36,7 +36,10 @@
             {% csrf_token %}
             <button class="o1 btn-card bi" type="submit" name='x'>Xóa sản phẩm</button> 
         </form>
+         <form action="{% url 's' ctsp.ma_sp %}" method="post" style="margin-top:10px;">
+            {% csrf_token %}
         <button class="o2 bi" type="submit" name='s'>Sửa sản phẩm</button>
+        </form>
     {% else %}
         
         <form method="post" action="{% url 'tvg' %} " class="khung">

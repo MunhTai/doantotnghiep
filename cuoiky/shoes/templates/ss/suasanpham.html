@@ -1,115 +1,144 @@
+
+
 {% load static %}
 {% load humanize %}
-{% include "ss/head.html" %}
+
+<link rel="stylesheet" href="{% static 'css/Them.css'%}">
 <body>
 
+
+  {% include "ss/head.html" %}
 {% include "ss/header.html" %}
-{% include "ss/nav.html" %}
-{% include "ss/hang.html" %}
-{% include "ss/section.html" %}
 
-<div class="container mt-5">
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
 
-  <h2>Sửa sản phẩm: {{ sp.ten_sp }}</h2>
-  
-  <form method="post" enctype="multipart/form-data" class="mt-3">
-    {% csrf_token %}
 
-    <!-- Tên sản phẩm -->
-    <div class="mb-3">
-      <label class="form-label">Tên sản phẩm</label>
-      <input type="text" name="t" class="form-control" value="{{ sp.ten_sp }}">
+
+
+<body>
+    <div class="header">
+        <div class="container mt-5 ">
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <h1>Sửa Sản Phẩm {{sp.ten_sp}}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <a href="ss/index.html"><img src="{% static 'images/hinhanh/logo.png'%}" alt="" class="img-fluid"></a>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="body">
+        
+        <div class="container mt-3">
+            <div class="alert" role="alert">
+            </div>
+        </div>
+        <main style=" max-width:70%; margin-left: 230px;">
+            <article class="container mt-5">
+                <form method="post" enctype="multipart/form-data">
+                  {% csrf_token%}
+                    <input type="text" name="t" class="form-control" value="{{ sp.ten_sp }}">
+                    <input type="text" name="g" class="form-control" value="{{ sp.gia }}">
+                    <input type="text" name="gg" class="form-control" value="{{ sp.giam_gia }}">
 
-    <!-- Giá và Giá giảm -->
-    <div class="mb-3">
-      <label class="form-label">Giá sản phẩm</label>
-      <input type="text" name="g" class="form-control" value="{{ sp.gia }}">
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Giá giảm (nếu có)</label>
-      <input type="text" name="gg" class="form-control" value="{{ sp.giam_gia }}">
-    </div>
-
-    <!-- Hình hiện tại -->
-    <div class="mb-3">
-      <label class="form-label">Hình hiện tại</label>
-      <div class="d-flex flex-wrap">
-        {% for h in hinh_da_co %}
-          <div class="me-2 mb-2">
-            <img src="{{ h.hinh.url }}" width="100" class="img-thumbnail">
+                    <!-- Hình hiện tại -->
+        <div class="mb-3">
+          <label class="form-label">Hình hiện tại</label>
+          <div class="d-flex flex-wrap">
+            {% for h in hinh_da_co %}
+              <div class="me-2 mb-2">
+               <img src="{{ h.hinh.url }}" width="100" class="img-thumbnail">
+              </div>
+            {% endfor %}
           </div>
-        {% endfor %}
-      </div>
-    </div>
+        </div>
 
-    <!-- Upload hình mới -->
-    <div class="mb-3">
-      <label class="form-label">Thêm hình mới</label>
-      <input type="file" name="hinh" multiple class="form-control">
-    </div>
+            <!-- Upload hình mới -->
+        <div class="mb-3">
+          <label class="form-label">Thêm hình mới</label>
+          <input type="file" name="hinh" multiple class="form-control">
+        </div>
+                    
 
-    <!-- Size -->
-     <div class="mb-3">
-      <label class="form-label">Size sản phẩm</label>
-      <div>
-        {% for s in size_list %}
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" name="s" value="{{ s.size }}"
-              {% for sz in size_da_co %}
-                {% if sz.size.size == s.size %} checked {% endif %}
-              {% endfor %}>
-            <label class="form-check-label">{{ s.size }}</label>
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-
-    <!-- Số lượng (áp dụng cho tất cả size đã chọn) -->
-    <div class="mb-3">
-      <label class="form-label">Số lượng</label>
-      <input type="number" name="sl" class="form-control" value="1" min="1">
-    </div>
-
-    <!-- Nhà cung cấp -->
-     <div class="mb-3">
-      <label class="form-label">Nhà cung cấp</label>
-      <div>
-        {% for ncc in ncc_list %}
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="h" value="{{ ncc.ten_ncc }}"
-                {%if ncc.ten_ncc == sp.nhacungcap.ten_ncc%} checked {%endif%}
+        {% comment %} <div>
+        <h2>Chọn nhà cung cấp</h2>
+          {%for n in ncc_list%}
+            <label style="display:block; margin-bottom:4px;">
+                <input type="checkbox" name="n" value="{{ n.ten_ncc }}" 
+                {% if n.ten_ncc in ncc_da_co.ten_ncc %}checked {%endif%}
                 >
-            <label class="form-check-label">{{ ncc.ten_ncc }}</label>
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-
-    <!-- Danh mục -->
-    <div class="mb-3">
-      <label class="form-label">Danh mục</label>
-      <div>
-        {% for dm in dm_list %}
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" name="d" value="{{ dm.ten_dm }}"
-                {%if dm in dm_da_co%} checked {%endif%}
-                >
-            <label class="form-check-label">{{ dm.ten_dm }}</label>
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Cập nhật sản phẩm</button>
-  </form>
+                {{n.ten_ncc}}
+          {%endfor%}
+        </div> {% endcomment %}
+        <div>
+  <h2> Chọn nhà cung cấp </h2>
+  {% for n in ncc_list %}
+    <label style="display:block; margin-bottom:4px;">
+        <input type="radio" name="n" value="{{ n.id }}"
+               {% if n.id == ncc_da_co.id %} checked {% endif %}>
+        {{ n.ten_ncc }}
+    </label>
+  {% endfor %}
 </div>
 
+
+        {% comment %} <div>
+          <h2> Chọn danh mục </h2>
+              {% for d in dm_list %}
+                <label style="display:block; margin-bottom:4px;">
+                <input type="checkbox" name="d" value="{{ d.ten_dm }}"
+                  {% if d in dm_da_co %} checked {% endif %}
+                >
+                {{ d.ten_dm }}
+               </label>
+              {% endfor %}
+        </div> {% endcomment %}
+        <div>
+  <h2> Chọn danh mục </h2>
+  {% for d in dm_list %}
+    <label style="display:block; margin-bottom:4px;">
+        <input type="checkbox" name="d" value="{{ d.id }}"
+               {% if d in dm_da_co %} checked {% endif %}>
+        {{ d.ten_dm }}
+    </label>
+  {% endfor %}
+</div>
+
+
+       <div>
+  <h2> Chọn size </h2>
+
+  {% for s in size_list %}
+    <label style="display:block; margin-bottom:4px;">
+
+      <!-- checkbox chọn size -->
+      <input type="checkbox" name="s" value="{{ s.id }}"
+        {% for item in size_da_co %}
+          {% if item.size.id == s.id %} checked {% endif %}
+        {% endfor %}>
+      {{ s.size }}
+
+      <!-- số lượng của size -->
+      <input type="number"
+             name="sl_{{ s.id }}"
+             value="
+                {% for item in size_da_co %}
+                  {% if item.size.id == s.id %}
+                    {{ item.so_luong }}
+                  {% endif %}
+                {% endfor %}
+             "
+             placeholder="SL"
+             style="width:70px; margin-left:8px;">
+    </label>
+  {% endfor %}
+</div>
+
+
+                    <button type="submit" class='btthem'>Sửa</button>
+                </form>
+
+            </article>
+        </main>
+    </div>
 </body>

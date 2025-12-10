@@ -8,66 +8,25 @@
 
 {% include "ss/header.html" %}
 
-{% comment %} {%include "ss/nav.html" %}
-
-{% include "ss/hang.html" %}
-
-{% include "ss/section.html" %}
-
-{% if messages %}
-  <div class="container mt-3">
-    {% for message in messages %}
-      <div 
-        class="alert 
-               {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}"
-        role="alert">
-        {{ message }}
-      </div>
-    {% endfor %}
-  </div>
-{% endif %}
-
-<main style=" max-width:70%;
-    margin-left: 230px;">
-<article class="container mt-5">
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <input type="text" name="t" placeholder="Tên nhà cung cấp">
-  <input type="text" name="sdt" placeholder="Số điện thoại">
-  <input type="text" name="dc" placeholder="Địa chỉ">
-  <input type="text" name="e" placeholder="Email">
- 
-
-  <select name='d' multiple> 
-    <option value=''> Chọn danh mục </option>
-    {%for d in dm_list%}
-        <option value='{{d.id}}'> {{d.ten_dm}}</option>
-    {% endfor %}
-  </select>
-
-  <button type="submit">Thêm</button>
-</form>
-
-</article>
-</main>
 
 
-</body> {% endcomment %}
 
 
-<body>
     <div class="header">
-        <div class="container mt-5 ">
-            <div class="row">
-                <div class="col-sm-6 ">
-                    <h1>Thêm Nhà Cung Cấp</h1>
-                </div>
-                <div class="col-sm-6">
-                    <a href="ss/index.html"><img src="{% static 'images/hinhanh/logo.png'%}" alt="" class="img-fluid"></a>
-                </div>
+    <div>
+        <div class="row">
+            <div class="col-sm-6 ">
+                <h1>Thêm nhà cung cấp
+
+                </h1>
+            </div>
+            <div class="col-sm-6">
+                <a href="ss/index.html"><img src="{% static 'images/hinhanh/logo.png'%}" alt="" class="img-fluid"></a>
             </div>
         </div>
     </div>
+</div>
+<body>
     <div class="body">
 
         <main style=" max-width:70%; margin-left: 230px;">
@@ -79,12 +38,14 @@
                     <input type="text" name="dc" placeholder="Địa chỉ">
                     <input type="text" name="e" placeholder="Email">
 
-
+                    <div>
+                      <h2> Chọn danh mục </h2>
                     <select name='d' multiple>
                         {%for d in dm_list%}
                           <option value='{{d.id}}'> {{d.ten_dm}}</option>
                         {% endfor %}
                     </select>
+                  </div>
 
                     <button type="submit" class='btthem'>Thêm</button>
                 </form>

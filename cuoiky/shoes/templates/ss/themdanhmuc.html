@@ -1,6 +1,5 @@
 {% load static %}
 {% load humanize %}
-{% comment %} {% include "ss/head.html" %} {% endcomment %}
 
 <link rel="stylesheet" href="{% static 'css/Them.css'%}">
 
@@ -14,7 +13,6 @@
         <div class="row">
             <div class="col-sm-6 ">
                 <h1>Thêm danh mục</h1>
-                <p>Điền thông tin danh mục cần thêm</p>
             </div>
             <div class="col-sm-6">
                 <a href="ss/index.html"><img src="{% static 'images/hinhanh/logo.png'%}" alt="" class="img-fluid"></a>
@@ -34,12 +32,14 @@
                     <input type="text" name="t" placeholder="Tên danh mục">
                     <input type="text" name="m" placeholder="Mô tả">
 
+                    <div>
+                        <h2> Chọn nhà cung cấp </h2>
                     <select name='n' multiple>
-                        <option value='tencc'>---Chọn nhà sản xuất---</option>
                         {%for n in ncc_list%}
                           <option value='{{n.ten_ncc}}'> {{n.ten_ncc}}</option>
                         {% endfor %}
                     </select>
+                </div>
 
                     <button class='btthem' type="submit">Thêm</button>
                 </form>

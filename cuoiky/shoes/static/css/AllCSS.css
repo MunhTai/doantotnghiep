@@ -6,10 +6,35 @@ header {
     /* display: flex; */
 }
 
+.header-search {
+    margin-top: 15px;
+}
+
+.header-search .search-input {
+    padding: 8px 15px;
+    padding-right: 55px;
+    border-radius: 30px;
+    font-size: 15px;
+}
+
+.header-search .search-btn {
+    position: absolute;
+    right: 5px;
+    top: 43%;
+    transform: translateY(-50%);
+    border: none;
+    background: #8C94C9;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 50%;
+}
+
+
 nav {
     display: flex;
     gap: 1.5rem;
     align-items: center;
+    list-style-type: none;
 }
 
 nav a {
@@ -27,6 +52,7 @@ nav a:hover {
 
 nav>div {
     position: relative;
+    
 }
 
 .list {

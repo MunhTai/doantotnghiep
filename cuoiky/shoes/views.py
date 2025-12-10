@@ -60,22 +60,7 @@ def chitiet(request, masp ):
 
 
 def dangky(request ):
-    # if request.method == 'POST': 
-    #     form = dangkyform(request.POST )
-    #     if form.is_valid():
-    #         user = form.save(commit=False)
-    #         user.is_active = False
-    #         user.save()
-
-    #         code = generate_otp()
-    #         Otp.objects.create(user=user, code=code)
-
-    #         send_otp_email(user,code)
-    #         return redirect('xac_thuc_otp',user_id=user.id)
-    # else:
-    #     form = dangkyform()
-    # return render(request,'ss/dangky.html',{'form':form})
-
+  
     if request.method == 'POST':
         ten = request.POST.get('username')
         mk = request.POST.get('password')
@@ -154,6 +139,7 @@ def timkiem(request):
 
     return render(request, 'ss/timkiem.html',{'tukhoa':tukhoa,'kq':kq})
 
+@ staff_member_required
 def themsp (request):
     if request.method == "POST":
         ten = request.POST.get('t')
@@ -197,6 +183,7 @@ def themsp (request):
                                                   'dm_list':Danhmuc.objects.all(),
                                                   'size_list':Size.objects.all()})
 
+@ staff_member_required
 def themncc(request):
     dm = Danhmuc.objects.all()
     if request.method == 'POST':
@@ -224,6 +211,7 @@ def themncc(request):
     }
     return render(request,'ss/themncc.html',context)
 
+@ staff_member_required
 def themdanhmuc(request):
     ncc_list = NhaCungCap.objects.all()
     if request.method == 'POST':
@@ -262,7 +250,7 @@ def suasp(request,masp):
     hinhsanpham = HinhAnhSanPham.objects.filter(san_pham=sp)
     sizesanpham = SizeSanPham.objects.filter(sanpham=sp)
     dmsanpham = sp.danhmuc.filter()
-    nccsanpham = sp.nhacungcap.ten_ncc
+    nccsanpham = sp.nhacungcap
 
     hinh_list = HinhAnhSanPham.objects.all()
     size_list = Size.objects.all()
@@ -294,7 +282,7 @@ def suasp(request,masp):
 
             for s in kichco:
                 size_obj = Size.objects.get(size=s)
-                SizeSanPham.objects.update_or_create(
+                SizeSanPham.objects.update(
                     sanpham = sp,
                     size = size_obj,
                     defaults={'so_luong':soluong or 1}
@@ -309,7 +297,7 @@ def suasp(request,masp):
             messages.success(request, f'Đã cập nhật thành công sản phẩm {sp.ten_sp}')
             return redirect('ct',masp=sp.ma_sp)
         
-        context = {
+    context = {
         'sp': sp,
         'hinh_list': hinh_list,
         'size_list': size_list,
@@ -321,6 +309,9 @@ def suasp(request,masp):
         'ncc_da_co':nccsanpham
     }
     return render(request,'ss/suasanpham.html',context)
+
+  
+
 
 
 
@@ -552,13 +543,20 @@ def capnhattrangthai(request, order_id):
 
 def quanly_dm(request):
     all_dm=Danhmuc.objects.all()
+
     
     context = {
         'dm':all_dm,
         
     }
     return render(request,'ss/danhsach_dm.html',context)
+def xoa_dm(request, dm_xoa):
+    xoa_dm = Danhmuc.objects.get(id=dm_xoa)
+    xoa_dm.delete()
 
+    
+    return redirect ('qldm')
+ 
 def quanly_sp(request):
     all_sp=SanPham.objects.all()
     
@@ -575,9 +573,18 @@ def quanly_ncc(request):
     }
     return render(request,'ss/danhsach_ncc.html',context)
 
+def xoa_ncc(request, ncc_xoa):
+    xoa_ncc = NhaCungCap.objects.get(id=ncc_xoa)
+    xoa_ncc.delete()
+    return redirect('qlncc')
+
 def quanly_nd(request):
     all_nd=Nguoidung.objects.all()
     context = {
         'nd':all_nd
     }
     return render(request,'ss/danhsach_nd.html',context)
+def xoa_nd(request, nd_xoa):
+    xoa_nd = Nguoidung.objects.get(id=nd_xoa)
+    xoa_nd.delete()
+    return redirect('qlnd')

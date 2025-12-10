@@ -2,7 +2,8 @@
 {% load humanize %}
 
 {% include 'ss/head.html' %}
-
+{% include "ss/header.html" %}
+<br>
 <div class="container">
 
     <h2>Tất cả người dùng</h2>
@@ -12,6 +13,10 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Tên Người Dùng</th>
+                                <th>Số Điện Thoại</th>
+                                <th>Mail</th>
+                                <th>Địa Chỉ</th>
+                                <th>Ngày Tạo</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -19,7 +24,19 @@
                             
                             <tr>
                                 <td> {{u.username}} </td>
+                                <td> {{u.phone}}</td>
+                                <td> {{u.email}}</td>
+                                <td> {{u.address}}</td>
+                                <td> {{u.date_joined|date:"d/m/Y H:i"}}
+                                    <a href="{% url 'xnd' u.id %}" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                 
+                                </td>
                             </tr>
+                            
                             {%endfor%}
                     
 
