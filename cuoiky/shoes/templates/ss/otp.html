@@ -1,11 +1,27 @@
-<h2>Nhập mã OTP</h2>
+
+{%load static%}
+
+
+ <link rel="stylesheet" href="{% static 'css/signup-login.css'%}">
+
+{% include 'ss/header.html'%}
+
+
 
 {% if error %}
 <p style="color:red;">{{ error }}</p>
 {% endif %}
-
-<form method="POST">
-    {% csrf_token %}
+<body>
+    <div >
+        <div class="background"></div>
+        <div class="container">
+            <form class="glass-card" method="POST">
+                {% csrf_token %}
+                <h2>Nhập mã OTP</h2>
+                 {% csrf_token %}
     <input type="text" name="otp" placeholder="Nhập mã OTP">
     <button type="submit">Xác thực</button>
-</form>
+            </form>
+        </div>
+    </div>
+</body>

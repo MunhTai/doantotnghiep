@@ -1,4 +1,4 @@
-
+{% comment %} 
 
 
 {% load static %}
@@ -67,16 +67,10 @@
             <div class="card cart-summary">
                 <div class="card-body">
                     <h5 class="card-title mb-4">Order Summary</h5>
-                    <div class="d-flex justify-content-between mb-3">
-                        
-                        <span>Tạm tính</span>
-                        
-                        <span> {{tongtien|floatformat:0|intcomma}}đ</span>
-                        
-                    </div>
+                   
                     <div class="d-flex justify-content-between mb-3">
                         <span>Phí vận chuyển</span>
-                        <span>Miễn phí</span>
+                        <span>{{ship|floatformat:0|intcomma}}đ</span>
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between mb-4">
@@ -103,4 +97,181 @@
 </div>
 
 <script src="{% static 'js/AllJS.js'%}"></script>
+ {% endcomment %}
+
+ 
+
+
+{% load static %}
+{% load humanize %}
+{% include "ss/head.html" %}
+<body>
+{% include "ss/header.html" %}
+
+<div class="container py-5">
+    <h1 class="mb-5">Giỏ hàng của bạn</h1>
+  
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    
+                    {% if ct %}
+                        {% for item in ct %}
+                            <div class="row cart-items mb-3 align-items-center" data-unitprice="{{ item.don_gia }}" data-stock="{{ item.size_sanpham.so_luong }}" data-ctid="{{ item.id }}">
+                                <!-- Ảnh sản phẩm -->
+                                <div class="col-md-3 mb-3">
+                                    {% if item.size_sanpham.sanpham.hinh_anh.first %}
+                                        <img src="{{ item.size_sanpham.sanpham.hinh_anh.first.hinh.url }}" class="img-fluid rounded" alt="{{ item.size_sanpham.sanpham.ten_sp }}">
+                                    {% else %}
+                                        <img src="{% static 'ss/default.png' %}" class="img-fluid rounded" alt="No image">
+                                    {% endif %}
+                                </div>
+
+                                <!-- Thông tin sản phẩm -->
+                                <div class="col-md-5">
+                                    <h5 class="card-title">{{ item.size_sanpham.sanpham.ten_sp }}</h5>
+                                    <p class="mb-1">Size: {{ item.size_sanpham.size.size }}</p>
+                                    <div class="mt-2">
+                                        <a href="{% url 'xgh' item.id %}" class="btn btn-sm btn-outline-danger">Xóa</a>
+                                    </div>
+                                </div>
+
+                                <!-- Số lượng -->
+                                 <div class="col-md-2 quantity-control">
+                                    <button type="button" class="decrease btn btn-sm btn-outline-secondary">-</button>
+                                        <input type="hidden" class="qty-input" name="quantity-{{item.id}}" value="{{item.so_luong}}">
+                                        <span class="qty">{{item.so_luong}}</span>
+                                        <button type="button" class="increase btn btn-sm btn-outline-secondary">+</button>
+                                </div> 
+
+    
+
+                                <!-- Giá + xóa -->
+                                <div class="col-md-2 text-end">
+                                    <!-- Giá đơn vị -->
+                                        <!-- GIÁ ĐƠN VỊ (KHÔNG ĐỤNG TỚI) -->
+                                        <p class="unit-price"
+                                           data-unitprice="{{ item.don_gia }}">
+                                           {{ item.don_gia|floatformat:0|intcomma }} đ
+                                        </p>
+
+                                        <!-- THÀNH TIỀN (JS SẼ UPDATE) -->
+                                        <p class="fw-bold line-total">
+                                           {{ item.thanhtien|floatformat:0|intcomma }} đ
+                                        </p>
+                                </div>
+                                <hr>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>Giỏ hàng trống.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="text-start mb-4">
+                <a href="{% url 'tc' %}" class="btn btn-primary">
+                    <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
+                </a>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-4">
+            <div class="card cart-summary">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Order Summary</h5>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Tạm tính</span>
+                        <span id="subtotal">{{tongtien|floatformat:0|intcomma}}đ</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4">
+                        <strong>Tổng tiền</strong>
+                        <strong id="total">{{tongtien|floatformat:0|intcomma}}đ</strong>
+                    </div>
+                    <a href="{% url 'tt'%}"> <button class="btn btn-primary w-100">Proceed to Checkout</button> </a>
+                    
+                </div>
+                
+            </div>
+            <!-- Promo code -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Apply Promo Code</h5>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Enter promo code">
+                        <button class="btn btn-outline-secondary" type="button">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cartItems = document.querySelectorAll('.cart-items');
+        const subtotalElement = document.getElementById('subtotal');
+        const totalElement = document.getElementById('total');
+        const SHIPPING_FEE = 0; // Phí vận chuyển (nếu có)
+
+        function updateTotals() {
+            let subtotal = 0;
+
+            cartItems.forEach(item => {
+                const lineTotalElement = item.querySelector('.line-total');
+                const lineTotalText = lineTotalElement.textContent.replace(/[^0-9]/g, '');
+                const lineTotal = parseInt(lineTotalText) || 0;
+                subtotal += lineTotal;
+            });
+
+            subtotalElement.textContent = subtotal.toLocaleString() + ' đ';
+            const total = subtotal + SHIPPING_FEE;
+            totalElement.textContent = total.toLocaleString() + ' đ';
+        }
+        cartItems.forEach(item => {
+            const decreaseBtn = item.querySelector('.decrease');
+            const increaseBtn = item.querySelector('.increase');
+            const qtyElement = item.querySelector('.qty');
+            const qtyInput = item.querySelector('.qty-input');
+            const unitPrice = parseInt(item.getAttribute('data-unitprice'));
+            const stock = parseInt(item.getAttribute('data-stock'));
+            const lineTotalElement = item.querySelector('.line-total');
+
+            decreaseBtn.addEventListener('click', function() {
+                let qty = parseInt(qtyElement.textContent);
+                if (qty > 1) {
+                    qty--;
+                    qtyElement.textContent = qty;
+                    qtyInput.value = qty;
+
+                    const lineTotal = qty * unitPrice;
+                    lineTotalElement.textContent = lineTotal.toLocaleString() + ' đ';
+
+                    updateTotals();
+                }
+            });
+
+            increaseBtn.addEventListener('click', function() {
+                let qty = parseInt(qtyElement.textContent);
+                if (qty < stock) {
+                    qty++;
+                    qtyElement.textContent = qty;
+                    qtyInput.value = qty;
+
+                    const lineTotal = qty * unitPrice;
+                    lineTotalElement.textContent = lineTotal.toLocaleString() + ' đ';
+
+                    updateTotals();
+                } else {
+                    alert('Đã đạt đến số lượng tối đa trong kho!');
+                }
+            });
+        });
+
+    });
+</script>
+</body>
 

@@ -475,11 +475,12 @@ h2 {
     }
 
     
-    .cart-item-list {
-        height: 100px;
+   .cart-item-list {
+        max-height: 260px;
+        height: 230px;
         overflow-y: auto;
         padding-right: 8px;
-    }
+    } 
 
     .cart-item-list::-webkit-scrollbar {
         width: 6px;

@@ -4,6 +4,9 @@
 
 {%include 'ss/head.html'%}
 
+
+
+
 <header>
     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; list-style:none;">
       <div>
@@ -67,23 +70,41 @@
         <i class="fa-solid fa-cart-shopping" style="font-size: 26px;"></i>
 
         <!-- Số lượng giỏ -->
-        <span id="cart-count"
+        <span id="cart_count"
               style="position:absolute; top:-8px; right:-10px;
                      background:red; color:white; 
                      padding:2px 6px; font-size:12px;
                      border-radius:50%; font-weight:bold;">
-            0
+            {{ cart_count|default:0 }}
         </span>
     </div>
 </a>
               <a href="{% url 'dh'%}">
-                <i class="fa-solid fa-cart-shopping" >Đơn hàng</i>
+                <span class="bi bi-receipt" >ĐƠN HÀNG</span>
               </a>
               <a href="{% url 'dx' %}" >
-                  <span class="navbar-text">Đăng xuất</b></span>
+                  <span class="navbar-text">ĐĂNG XUẤT</b></span>
               </a>
             {%endif%}
         {%endif%}
       </nav>
     </div>
+
+    {% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+        <div class="alert 
+            {% if message.tags == 'success' %}alert-success
+            {% elif message.tags == 'error' %}alert-danger
+            {% elif message.tags == 'warning' %}alert-warning
+            {% else %}alert-info{% endif %}
+            alert-dismissible fade show" role="alert">
+
+            {{ message }}
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
   </header>

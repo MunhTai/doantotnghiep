@@ -19,6 +19,7 @@
     <h2>Sản phẩm giảm giá</h2> <br>
     <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
       <div class="warper" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+        {%if giamgia%}
         {%for s in giamgia%}
         <div class="Products-sale">
           
@@ -30,10 +31,12 @@
           <h3><a href="{%url 'ct' s.ma_sp %}" style ='color: black;
     text-decoration: none;'> {{s.ten_sp}} </a></h3>
           <p>{{s.mo_ta}}</p>
-          <div ><s>{{s.gia| floatformat:0 | intcomma}}đ</s> <strong>{{ s.gia | floatformat:0 | intcomma  }}đ</strong></div>
+          <div ><s>{{s.gia| floatformat:0 | intcomma}}đ</s> <strong>{{ s.giam_gia | floatformat:0 | intcomma  }}đ</strong></div>
         </div>
         {% endfor %}
-       
+        {%else%}
+          <strong> Đang không có sản phẩm giảm giá </strong>
+        {%endif%}
 
     </div>
   </section>

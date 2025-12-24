@@ -40,9 +40,6 @@ class Danhmuc(models.Model):
         return self.ten_dm
     
     
-    
-    
-    
 # Bảng Nhà Cung Cấp
 class NhaCungCap(models.Model):
     ten_ncc = models.CharField("Tên nhà cung cấp", max_length=255)

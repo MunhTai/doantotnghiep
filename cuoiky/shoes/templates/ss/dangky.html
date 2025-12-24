@@ -4,13 +4,13 @@
 
 {% include 'ss/header.html'%}
 
-             
-
 <body>
 <div >
         <div class="background"></div>
         <div class="container">
-            <form class="glass-card" action="/register" method="POST">
+            
+            <form class="glass-card" method="POST">
+                {% csrf_token %}
                 <h2>Register</h2>
                 <p>Please fill in this form to create an account</p>
                 <label for="username">Username</label>
@@ -20,9 +20,14 @@
                 <input type="email" name='email' id="email" placeholder="you@gmail.com" required>
 
                 <label for="password">Password</label>
-                <input type="password" name='password' id="password" placeholder="********" required>
+                <input type="password" name='password1' id="password" placeholder="********" required>
 
-                <button type="submit">Register</button>
+                <label for="password">Password again</label>
+                <input type="password" name='password2' id="password" placeholder="********" required>
+
+                <label for="phone">Phone</label>
+                <input type="phone" name='phone' id="phone" placeholder="********" required>
+                <button type="submit">Đăng Ký</button>
                 <div >
                     <p >Already have an account? <a href="{% url 'dn' %}">Login</a></p>
                 </div>

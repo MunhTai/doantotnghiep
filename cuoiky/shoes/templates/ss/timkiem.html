@@ -10,33 +10,6 @@
 <article class="container mt-5">
 
 
- 
-  {% comment %} <div class="row">
-    
-    {%for s in kq %}
-    
-    <div class="col-md-4 mb-4">
-      <div class="card h-100 shadow-sm rounded">
-        {% if s.hinh_anh.all %}
-          <img src="{{s.hinh_anh.first.hinh.url}}" class="card-img-top img-fluidsp">
-        {%endif%}
-        <div class="card-body text-center">
-          <h5 class="card-title fw-bold text-dark"><a href="{% url 'ct' s.ma_sp%}" class="link">{{ s.ten_sp }}</a></h5>
-          <p class="text-danger fw-semibold mb-2">{%if s.gia > s.giam_gia%}
-                                                    <s>{{s.gia|floatformat:0|intcomma}}</s> {{ s.giam_gia|floatformat:0|intcomma }} VND</p>
-                                                  {%else%}  
-                                                        {{s.gia|floatformat:0|intcomma}} VND
-                                                  {%endif%}
-                                                    
-
-        </div>
-      </div>
-    </div>
-      
-    {%endfor%}
-   
-  </div> {% endcomment %}
-
   <h1> Kết quả: {{tukhoa}} </h1>
   <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
     

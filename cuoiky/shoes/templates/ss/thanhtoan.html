@@ -87,7 +87,7 @@
 
                 <h3>Tổng kết đơn hàng</h3>
                 <p>Tạm tính: {{ tongtien|floatformat:0|intcomma }} đ</p>
-                <p>Phí ship: 0đ</p>
+                <p>Phí ship: {{ship|floatformat:0|intcomma}}đ</p>
                 <p><b>Tổng cộng: {{ tongtien|floatformat:0|intcomma }} đ</b></p>
 
                 <button type="submit">Xác nhận đặt hàng</button>

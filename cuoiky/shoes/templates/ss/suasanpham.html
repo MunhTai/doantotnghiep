@@ -37,8 +37,11 @@
             <article class="container mt-5">
                 <form method="post" enctype="multipart/form-data">
                   {% csrf_token%}
+                    <strong> Tên </strong>
                     <input type="text" name="t" class="form-control" value="{{ sp.ten_sp }}">
+                    <strong> Giá </strong>
                     <input type="text" name="g" class="form-control" value="{{ sp.gia }}">
+                    <strong> Giá giảm </strong>
                     <input type="text" name="gg" class="form-control" value="{{ sp.giam_gia }}">
 
                     <!-- Hình hiện tại -->
@@ -60,16 +63,7 @@
         </div>
                     
 
-        {% comment %} <div>
-        <h2>Chọn nhà cung cấp</h2>
-          {%for n in ncc_list%}
-            <label style="display:block; margin-bottom:4px;">
-                <input type="checkbox" name="n" value="{{ n.ten_ncc }}" 
-                {% if n.ten_ncc in ncc_da_co.ten_ncc %}checked {%endif%}
-                >
-                {{n.ten_ncc}}
-          {%endfor%}
-        </div> {% endcomment %}
+        
         <div>
   <h2> Chọn nhà cung cấp </h2>
   {% for n in ncc_list %}
@@ -82,17 +76,7 @@
 </div>
 
 
-        {% comment %} <div>
-          <h2> Chọn danh mục </h2>
-              {% for d in dm_list %}
-                <label style="display:block; margin-bottom:4px;">
-                <input type="checkbox" name="d" value="{{ d.ten_dm }}"
-                  {% if d in dm_da_co %} checked {% endif %}
-                >
-                {{ d.ten_dm }}
-               </label>
-              {% endfor %}
-        </div> {% endcomment %}
+       
         <div>
   <h2> Chọn danh mục </h2>
   {% for d in dm_list %}
@@ -121,13 +105,7 @@
       <!-- số lượng của size -->
       <input type="number"
              name="sl_{{ s.id }}"
-             value="
-                {% for item in size_da_co %}
-                  {% if item.size.id == s.id %}
-                    {{ item.so_luong }}
-                  {% endif %}
-                {% endfor %}
-             "
+             value="{% for item in size_da_co %}{% if item.size.id == s.id %}{{ item.so_luong }}{% endif %}{% endfor %}"
              placeholder="SL"
              style="width:70px; margin-left:8px;">
     </label>
