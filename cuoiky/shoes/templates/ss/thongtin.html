@@ -6,7 +6,7 @@
 <br>
 <div class="container">
 
-    <h2>Tất cả người dùng</h2>
+    <h2>Thông tin cá nhân</h2>
            <div class="card shadow-sm">
                 <div class="card-body">
                     <table class="table table-hover align-middle">
@@ -20,24 +20,29 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for u in nd %}
                             
                             <tr>
-                                <td> {{u.username}} </td>
-                                <td> {{u.phone}}</td>
-                                <td> {{u.email}}</td>
-                                <td> {{u.diachi_daydu}}</td>
-                                <td> {{u.date_joined|date:"d/m/Y H:i"}}
-                                    <a href="{% url 'xnd' u.id %}" class="btn btn-sm btn-outline-danger">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
+                                <td> {{tt.username}} </td>
+                                <td> {{tt.phone}}</td>
+                                <td> {{tt.email}}</td>
+                                <td> {{tt.diachi_daydu}}</td>
+                                <td> {{tt.date_joined|date:"d/m/Y H:i"}}
+                                    
                                 </td>
+                                
+                            </tr>
+                            <tr> 
                                 <td>
-                                 
+                                 <a href="{% url 'dx' %}" class="btn btn-sm btn-outline-danger">
+                                        Đăng xuất
+                                    </a>
+                                <a href="{% url 'stt' %}" class="btn btn-sm btn-outline-danger">
+                                        Chỉnh sửa thông tin
+                                    </a>
                                 </td>
                             </tr>
                             
-                            {%endfor%}
+                            
                     
 
                         </tbody>

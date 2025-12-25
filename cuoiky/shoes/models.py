@@ -12,8 +12,17 @@ from django.db.models import Max
 class Nguoidung(AbstractUser):
     email = models.EmailField("email", max_length=254,unique=True)
     phone = models.CharField("Số điện thoại", max_length=20, blank=True, null=True, unique=True)
-    address = models.TextField("Địa chỉ", blank=True)
+    so_nha = models.CharField(max_length=50,blank=True)
+    duong = models.CharField(max_length=100,blank=True)
+    phuong = models.CharField(max_length=100,blank=True)
+    quan = models.CharField(max_length=100,blank=True)
+    tinh = models.CharField(max_length=100,blank=True)
 
+
+    @property
+    def diachi_daydu(self):
+        return f"{self.so_nha},{self.duong},{self.phuong},{self.quan},{self.tinh}"
+    
     def __str__(self):
         return self.get_username()
     

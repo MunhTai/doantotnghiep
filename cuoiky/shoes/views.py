@@ -68,6 +68,11 @@ def dangky(request ):
         mk2 = request.POST.get('password2')
         mail = request.POST.get('email')
         phone = request.POST.get('phone')
+        so_nha = request.POST['so_nha']
+        duong = request.POST['duong']
+        phuong = request.POST['phuong']
+        district = request.POST['district']
+        city = request.POST['city']
 
         if Nguoidung.objects.filter(username=ten).exists():
             messages.error(request, 'Username đã tồn tại')
@@ -85,12 +90,17 @@ def dangky(request ):
             messages.error(request,'Mật khẩu nhập chưa khớp! Hãy kiểm tra lại')
             return redirect('dk')
         
-        user = Nguoidung.objects.create(
-            username = ten,
-            password = mk1,
-            email = mail,
-            is_active = False
-
+        user = Nguoidung.objects.create_user(
+            username=ten,
+            password=mk1,    
+            email=mail,
+            phone=phone,
+            so_nha=so_nha,
+            duong=duong,
+            phuong=phuong,
+            quan=district,
+            tinh=city,
+            is_active=False
         )
         code = generate_otp()
         Otp.objects.create(user=user, code=code)
@@ -139,6 +149,7 @@ def dangnhap(request):
         
     else:
         form = AuthenticationForm()
+    
     return render(request,"ss/dangnhap.html",{'form':form})
 
 def dangxuat(request):
@@ -264,49 +275,45 @@ def xoasp(request,masp):
 def suasp(request, masp):
     sp = get_object_or_404(SanPham, ma_sp=masp)
 
-    # ===== Dữ liệu hiện có =====
     hinh_da_co = HinhAnhSanPham.objects.filter(san_pham=sp)
     size_da_co = SizeSanPham.objects.filter(sanpham=sp)
     dm_da_co = sp.danhmuc.all()
     ncc_da_co = sp.nhacungcap
 
-    # ===== Danh sách để hiển thị =====
     size_list = Size.objects.all()
     ncc_list = NhaCungCap.objects.all()
     dm_list = Danhmuc.objects.all()
     size_id_daco = size_da_co.values_list('size_id', flat=True)
 
     if request.method == 'POST':
-        # ===== Lấy dữ liệu từ form =====
+        
         ten = request.POST.get('t')
         gia = request.POST.get('g')
         giamgia = request.POST.get('gg')
         hinh_moi = request.FILES.getlist('hinh')
-        size_ids = request.POST.getlist('s')      # checkbox size
-        ncc_id = request.POST.get('n')             # radio NCC
-        dm_ids = request.POST.getlist('d')         # checkbox danh mục
+        size_ids = request.POST.getlist('s')      
+        ncc_id = request.POST.get('n')            
+        dm_ids = request.POST.getlist('d')         
 
-        # ===== Validate =====
+        
         if not ten or not gia or not ncc_id:
             messages.error(request, 'Vui lòng nhập đủ các dữ liệu bắt buộc')
             return redirect(request.path)
 
-        # ===== Cập nhật sản phẩm =====
+      
         sp.ten_sp = ten
         sp.gia = Decimal(gia)
         sp.giam_gia = Decimal(giamgia) if giamgia else None
         sp.nhacungcap = NhaCungCap.objects.get(id=ncc_id)
         sp.save()
 
-        # ===== Thêm hình mới =====
+        
         for h in hinh_moi:
             HinhAnhSanPham.objects.create(
                 san_pham=sp,
                 hinh=h
             )
 
-        # ===== Cập nhật size + số lượng =====
-        # Xóa size cũ không còn được chọn
         SizeSanPham.objects.filter(sanpham=sp)\
             .exclude(size_id__in=size_ids).delete()
 
@@ -320,14 +327,12 @@ def suasp(request, masp):
                 defaults={'so_luong': so_luong}
             )
 
-        # ===== Cập nhật danh mục =====
+    
         sp.danhmuc.set(dm_ids)
 
         messages.success(request, f'Đã cập nhật sản phẩm {sp.ten_sp}')
         return redirect('ct', masp=sp.ma_sp)
     
-
-    # ===== Context =====
     context = {
         'sp': sp,
         'hinh_da_co': hinh_da_co,
@@ -419,6 +424,9 @@ def xoagiohang(request, ct_id):
 
 def thanhtoan(request):
     user = request.user
+    diachi_mac_dinh = request.user.diachi_daydu
+    ten_nguoi_nhan = request.user.username
+    sdt = request.user.phone
 
     if request.method == "GET" and request.GET.get('buy_now') != '1':
         request.session.pop('mua_ngay', None)
@@ -453,7 +461,7 @@ def thanhtoan(request):
 
   
     if request.method == "POST":
-        diachi = request.POST.get("dia_chi")
+        diachi = request.POST.get('dia_chi')
         phuongthuc = request.POST.get("phuong_thuc")
 
       
@@ -472,6 +480,7 @@ def thanhtoan(request):
                 so_luong=item.so_luong,
                 don_gia=item.don_gia
             )
+           
 
             item.size_sanpham.so_luong -= item.so_luong
             item.size_sanpham.save()
@@ -488,12 +497,13 @@ def thanhtoan(request):
             sanpham_muangay['size'].save()
 
 
-        # 4.4 Sau khi thanh toán → xóa dữ liệu
+       
         if ctgh.exists():
             Chitietgiohang.objects.filter(gio_hang=giohang).delete()
 
         if muangay:
             del request.session['mua_ngay']
+        messages.success(request,'Đã đặt đơn thành công')
 
         return redirect("tc")
 
@@ -503,7 +513,10 @@ def thanhtoan(request):
         'ct': ctgh,
         'mua_ngay': sanpham_muangay,
         'tongtien': tongtien,
-        'ship':phiship
+        'ship':phiship,
+        'dc':diachi_mac_dinh,
+        'ten':ten_nguoi_nhan,
+        'sdt':sdt,
     }
 
     return render(request, 'ss/thanhtoan.html', context)
@@ -625,3 +638,32 @@ def xoa_nd(request, nd_xoa):
     xoa_nd = Nguoidung.objects.get(id=nd_xoa)
     xoa_nd.delete()
     return redirect('qlnd')
+
+def thongtin_nguoidung(request):
+    thongtin = request.user
+
+    context = {
+        'tt':thongtin
+    }
+    return render(request,'ss/thongtin.html',context)
+
+def sua_thongtin(request):
+    user = request.user
+
+    if request.method == 'POST':
+        user.username = request.POST.get('username') or user.username
+        user.phone    = request.POST.get('phone')    or user.phone
+        user.so_nha   = request.POST.get('so_nha')   or user.so_nha
+        user.duong    = request.POST.get('duong')    or user.duong
+        user.phuong   = request.POST.get('phuong')   or user.phuong
+        user.quan     = request.POST.get('quan')     or user.quan
+        user.tinh     = request.POST.get('tinh')     or user.tinh
+        user.save()
+
+        messages.success(request, "Đã cập nhật thông tin thành công!")
+        return redirect('ttnd')
+
+    return render(request, 'ss/sua_thongtin.html')
+
+    
+    

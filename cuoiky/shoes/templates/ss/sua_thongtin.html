@@ -1,0 +1,78 @@
+{% comment %} <form method="POST">
+    {% csrf_token %}
+
+    <label>Họ tên</label>
+    <input type="text" name="username" value="{{ user.username }}" required>
+
+    <label>Số điện thoại</label>
+    <input type="text" name="phone" value="{{ user.phone|default:'' }}">
+
+    <label>Số nhà</label>
+    <input type="text" name="so_nha" value="{{ user.so_nha|default:'' }}">
+
+    <label>Đường</label>
+    <input type="text" name="duong" value="{{ user.duong|default:'' }}">
+
+    <label>Phường</label>
+    <input type="text" name="phuong" value="{{ user.phuong|default:'' }}">
+
+    <label>Quận</label>
+    <input type="text" name="quan" value="{{ user.quan|default:'' }}">
+
+    <label>Tỉnh / Thành phố</label>
+    <input type="text" name="tinh" value="{{ user.tinh|default:'' }}">
+
+    <button type="submit">Lưu thay đổi</button>
+</form>
+
+ {% endcomment %}
+
+ {% load static %}
+<link rel="stylesheet" href="{% static 'css/Them.css'%}">
+
+{% include "ss/head.html" %}
+{% include "ss/header.html" %}
+
+<div class="header">
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-sm-6">
+        <h1>Sửa Thông Tin '{{user}}'</h1>
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+<div class="body">
+  <main style="max-width:70%; margin-left:230px;">
+    <article class="container mt-5">
+      <form method="post">
+        {% csrf_token %}
+
+        <strong>Họ tên</strong>
+        <input type="text" name="ten" class="form-control" value="{{ user.username }}">
+
+        <strong>Số điện thoại</strong>
+        <input type="text" name="sdt" class="form-control" value="{{ user.phone|default:'' }}">
+
+        <strong>Số nhà</strong>
+        <input type="text" name="sonha" class="form-control" value="{{ user.so_nha|default:'' }}">
+
+        <strong>Đường</strong>
+        <input type="text" name="duong" class="form-control" value="{{ user.duong|default:'' }}">
+
+        <strong>Phường</strong>
+        <input type="text" name="phuong" class="form-control" value="{{ user.phuong|default:'' }}">
+
+        <strong>Quận</strong>
+        <input type="text" name="quan" class="form-control" value="{{ user.quan|default:'' }}">
+
+        <strong>Tỉnh / Thành phố</strong>
+        <input type="text" name="tinh" class="form-control" value="{{ user.tinh|default:'' }}">
+
+        <button type="submit" class="btthem">Lưu thay đổi</button>
+      </form>
+    </article>
+  </main>
+</div>

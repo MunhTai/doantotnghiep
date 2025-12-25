@@ -232,7 +232,7 @@ addBtn && addBtn.addEventListener('click', async function(e){
         const current = parseInt(cartCountEl.textContent) || 0;
         cartCountEl.textContent = current + qty; // 
    }
-    this.closest('form').submit();
+    
 
     if(form){
         const actionInput = document.getElementById('action-input');

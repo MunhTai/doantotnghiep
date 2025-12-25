@@ -13,20 +13,37 @@
                 {% csrf_token %}
                 <h2>Register</h2>
                 <p>Please fill in this form to create an account</p>
-                <label for="username">Username</label>
+                <label for="username">Tên người dùng</label>
                 <input type="text" name='username' id="username" placeholder="Username" required />
+
+                <label for="phone">Số điện thoại</label>
+                <input type="phone" name='phone' id="phone" placeholder="********" required>
+
+                <label for="so_nha">Số nhà</label>
+                <input type="text" name="so_nha" id="so_nha" placeholder="12/5" required>
+
+                <label for="duong">Tên đường</label>
+                <input type="text" name="duong" id="duong" placeholder="Lê Lợi" required>
+
+                <label for="phuong">Phường / Xã</label>
+                <input type="text" name="phuong" id="phuong" placeholder="Phường 4" required>
+
+                <label for="district">Quận / Huyện</label>
+                <input type="text" name="district" id="district" placeholder="Gò Vấp" required>
+
+                <label for="city">Tỉnh / Thành phố</label>
+                <input type="text" name="city" id="city" placeholder="TP. Hồ Chí Minh" required>
 
                 <label for="email">Email</label>
                 <input type="email" name='email' id="email" placeholder="you@gmail.com" required>
 
-                <label for="password">Password</label>
+                <label for="password">Mật khẩu</label>
                 <input type="password" name='password1' id="password" placeholder="********" required>
 
-                <label for="password">Password again</label>
+                <label for="password">Nhập lại mật khẩu</label>
                 <input type="password" name='password2' id="password" placeholder="********" required>
 
-                <label for="phone">Phone</label>
-                <input type="phone" name='phone' id="phone" placeholder="********" required>
+                
                 <button type="submit">Đăng Ký</button>
                 <div >
                     <p >Already have an account? <a href="{% url 'dn' %}">Login</a></p>

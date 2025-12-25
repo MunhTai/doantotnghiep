@@ -37,4 +37,7 @@ urlpatterns = [
     path('xoanhacungcap/<int:ncc_xoa>',views.xoa_ncc,name='xncc'),
      path('xoadanhmuc/<int:dm_xoa>',views.xoa_dm,name='xdm'),
     path('xoanguoidung/<int:nd_xoa>',views.xoa_nd,name='xnd'),
+
+     path('thongtincanhan/',views.thongtin_nguoidung,name='ttnd'),
+     path('suathongtincanhan/',views.sua_thongtin,name='stt'),
 ]
