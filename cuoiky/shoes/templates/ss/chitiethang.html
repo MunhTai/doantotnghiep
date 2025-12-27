@@ -50,7 +50,7 @@
         
     </div>
         {% if sp_list%}
-        <span> <a href='{% url 'mr' d.ten_dm ncc.id %}'>  Xem thêm </a> </span>
+        <button style=" margin-left:12px; background-color:#8C94C9;"  > <a style="text-decoration:none; color:white;  " href='{% url 'mr' d.ten_dm ncc.id %}'>  Xem thêm </a> </button> <br>
         {%else%}
         {%endif%}
     {% endfor %}

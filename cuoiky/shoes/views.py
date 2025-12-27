@@ -17,9 +17,9 @@ def gioithieu(request):
 
 def index(request):
 
-    hang = NhaCungCap.objects.all()
+    
     giamgia = SanPham.objects.filter(giam_gia__isnull=False)
-    return render(request,'ss/index.html',{'hang':hang,'giamgia':giamgia})
+    return render(request,'ss/index.html',{'giamgia':giamgia})
 
 def chitiethang(request,id_ncc):
     hang = NhaCungCap.objects.get(id=id_ncc)
