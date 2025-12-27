@@ -64,13 +64,13 @@
             <label class="noidung1">Số lượng:</label><br>
             <div class="qty-control" style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
                 <button type="button" id="decrease-btn" class="btn btn-sm btn-outline-secondary">-</button>
-                <input type="number" name="sl" id="quantity-input" min="1" value="1" style="text-align:center; width:70px;" class="noidung1">
+                <input type="number" name="sl" id="quantity-input" min="1" value="1" style="text-align:center; width:70px;" class="noidung1" readonly>
                 <button type="button" id="increase-btn" class="btn btn-sm btn-outline-secondary">+</button>
             </div>
 
             <!-- Nút -->
             <button id="add-to-cart-btn" class="o1 btn-card bi bi-cart-plus" name="action" value="add" type="submit">
-                Thêm vào giỏ
+                Thêm 
             </button>
             <input type="hidden" id="action-input" name="action" value="add" style="display:none;">
             <button class="o2 bi bi-wallet2" type="submit" name="action" value="buy">

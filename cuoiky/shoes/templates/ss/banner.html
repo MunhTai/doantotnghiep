@@ -1,4 +1,4 @@
-{%load static%}
+{% comment %} {%load static%}
 
 
 <section class="section1">
@@ -72,4 +72,140 @@
       showBanner(currentIndex + 1);
     }, 5000);
   });
+</script> {% endcomment %}
+
+{% load static %}
+
+<style>
+.section1 {
+  background-color: #FFFFFF;
+  padding: 2rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.introduction {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 30%;
+}
+
+.introduction .cta {
+  display: inline-block;
+  font-size: 15px;
+  background-color: #8C94C9;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  text-decoration: none;
+  text-align: center;
+  transition: background-color 0.4s ease;
+}
+.introduction .cta:hover {
+  background-color: #3F4B97;
+  transition: background-color 0.4s ease;
+}
+
+/* banner */
+.banners-parent {
+  position: relative;
+  width: 100%;
+  max-width: 1024px;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.banners {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  height: 100%;
+}
+
+.banners img {
+  width: 100%;
+  height: 300px;
+  flex: 0 0 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.banner-btn-left,
+.banner-btn-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.7);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 10;
+  padding: 8px;
+  font-size: 20px;
+}
+.banner-btn-left { left: 10px; }
+.banner-btn-right { right: 10px; }
+</style>
+
+<section class="section1">
+  <div class="introduction">
+    <h1>Chào mừng bạn đến với TDK SHOES</h1>
+    <a class="cta" href="{% url 'gt' %}">Tìm Hiểu</a>
+  </div>
+
+  <div>
+    <div class="banners-parent">
+      <button class="banner-btn-left" aria-label="Trước">‹</button>
+      <div class="banners">
+        <img src="{% static 'images/hinhanh/banner1.png' %}" alt="Banner 1">
+        <img src="{% static 'images/hinhanh/banner2.png' %}" alt="Banner 2">
+        <img src="{% static 'images/hinhanh/banner3.png' %}" alt="Banner 3">
+      </div>
+      <button class="banner-btn-right" aria-label="Sau">›</button>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const banners = document.querySelector('.banners');
+  const bannerImages = document.querySelectorAll('.banners img');
+  const btnLeft = document.querySelector('.banner-btn-left');
+  const btnRight = document.querySelector('.banner-btn-right');
+
+  let currentIndex = 0;
+  const totalBanners = bannerImages.length;
+
+  function getBannerWidth() {
+    return bannerImages[0] ? bannerImages[0].clientWidth : 0;
+  }
+
+  function showBanner(index) {
+    if (index < 0) index = totalBanners - 1;
+    if (index >= totalBanners) index = 0;
+    currentIndex = index;
+    const offset = -currentIndex * getBannerWidth();
+    banners.style.transform = `translateX(${offset}px)`;
+  }
+
+  btnLeft.addEventListener('click', () => showBanner(currentIndex - 1));
+  btnRight.addEventListener('click', () => showBanner(currentIndex + 1));
+
+  // điều chỉnh khi resize để vẫn chính xác
+  window.addEventListener('resize', () => showBanner(currentIndex));
+
+  // auto slide
+  setInterval(() => showBanner(currentIndex + 1), 5000);
+
+  // khởi tạo
+  showBanner(0);
+});
 </script>

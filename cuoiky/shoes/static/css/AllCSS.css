@@ -8,6 +8,7 @@ header {
 
 .header-search {
     margin-top: 15px;
+   
 }
 
 .header-search .search-input {
@@ -32,9 +33,10 @@ header {
 
 nav {
     display: flex;
-    gap: 1.5rem;
     align-items: center;
     list-style-type: none;
+    padding-left: 245px;
+   
     
 }
 

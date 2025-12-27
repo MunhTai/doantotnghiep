@@ -18,9 +18,9 @@
           <button class="search-btn" type="submit"><i class="fa fa-search"></i></button>
         </form>
       </div>
-
+      
         <a href="{% url 'tc'%}">HOME</a>
-        
+         
         <div>
               <a class="shop-btn">
                 SHOP <i class="fa-solid fa-angles-down"></i>
@@ -64,16 +64,9 @@
 
             <a href="{% url 'gh'%}">
               <div id="cart-icon" style="position: relative; display: inline-block;">
-              <i class="fa-solid fa-cart-shopping" style="font-size: 26px;"></i>
+              <i class="fa-solid fa-cart-shopping" style="font-size: 23px;"></i>
 
-             <!-- Số lượng giỏ -->
-              <span id="cart_count"
-                style="position:absolute; top:-8px; right:-10px;
-                     background:red; color:white; 
-                     padding:2px 6px; font-size:12px;
-                     border-radius:50%; font-weight:bold;">
-              {{ cart_count|default:0 }}
-              </span>
+            
               </div>
             </a>
 
@@ -81,10 +74,9 @@
               <span class="bi bi-receipt" >ĐƠN HÀNG</span>
             </a>
 
-              <li class="nav-item me-2">
                   <a href="{% url 'ttnd'%}">
                     <span class="navbar-text">👤 Xin chào, <b>{{user.username}}</b></span>
-                  <a>
+                  </a>
                 </li>
   
             {%endif%}

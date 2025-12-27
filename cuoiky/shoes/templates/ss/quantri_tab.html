@@ -1,0 +1,56 @@
+{% load humanize %}
+<div class="card shadow-sm">
+  <div class="card-body">
+    {% if label %}<h5 class="card-title mb-3">{{ label }}</h5>{% endif %}
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Mã</th>
+          <th>Tên Sản Phẩm</th>
+          <th>Khách hàng</th>
+          <th>Ngày đặt</th>
+          <th>Tổng tiền</th>
+          <th>Trạng thái</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for hd in list_hd %}
+          {% if hd.trang_thai == trangthai %}
+            {% for ct in hd.cthd.all %}
+              <tr>
+                <td>{{ hd.id }}</td>
+                <td>{{ ct.size_sanpham.sanpham.ten_sp }}</td>
+                <td>{{ hd.nguoidung.username }}</td>
+                <td>{{ hd.ngay_tao|date:"d/m/Y H:i" }}</td>
+                <td>{{ hd.tongcong|floatformat:0|intcomma }} đ</td>
+                <td>
+                  <span class="
+                    {% if hd.trang_thai == 'pending' %}bg-warning text-dark
+                    {% elif hd.trang_thai == 'confirmed' %}bg-info
+                    {% elif hd.trang_thai == 'shipping' %}bg-primary
+                    {% elif hd.trang_thai == 'delivered' %}bg-success
+                    {% else %}bg-danger{% endif %}
+                  ">
+                    {{ hd.get_trang_thai_display }}
+                  </span>
+                </td>
+                <td>
+                  <form method="post" action="{% url 'cn' hd.id %}">
+                    {% csrf_token %}
+                    <select name="trang_thai" class="form-select form-select-sm d-inline w-auto">
+                      {% for val, text in hd.trangthai_choices %}
+                        <option value="{{ val }}" {% if hd.trang_thai == val %} selected {% endif %}>{{ text }}</option>
+                      {% endfor %}
+                    </select>
+                    <button class="btn btn-sm btn-outline-primary">Cập nhật</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

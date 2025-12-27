@@ -9,6 +9,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Sum
 from .utils import generate_otp, send_otp_email
 from django.urls import reverse
+from django.contrib.auth.hashers import check_password
 # Create your views here.
 
 def gioithieu(request):
@@ -36,6 +37,7 @@ def chitiethang(request,id_ncc):
      }
 
     return render(request, 'ss/chitiethang.html/',context )
+
 def more(request,tendm,idncc):
     ncc = NhaCungCap.objects.get(id=idncc)
     dm = Danhmuc.objects.get(ten_dm=tendm,ncc=ncc)
@@ -110,8 +112,10 @@ def dangky(request ):
 
     return render(request, "ss/dangky.html")
 
-def otp(request,user_id):
-    user =Nguoidung.objects.get(id=user_id)
+
+
+def otp(request):
+    user =request.user
 
     if request.method == "POST":
         code = request.POST.get('otp')
@@ -131,26 +135,32 @@ def otp(request,user_id):
 
 
 def dangnhap(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                messages.success(request, f"Chào {username}")
-                return redirect("tc")
-            else:
-                messages.error(request,"Bạn nhập sai thông tin đăng nhập!")
-        else:
-            messages.error(request,f"Chưa nhập đủ thông tin!")
+        if not username or not password:
+            messages.error(request,"Chưa nhập đủ thông tin")
+            return redirect('dn')
         
-    else:
-        form = AuthenticationForm()
+        user = Nguoidung.objects.get(username=username)
+        if not user:
+            messages.error(request,"Sai thông tin đăng nhập")
+            return redirect('dn ')
+        
+        if not user.is_active:
+            messages.error(request,"Tài khoản chưa xác thực OTP")
+            return redirect('dn')
+        
+        if not check_password(password, user.password):
+            messages.error(request, "Sai mật khẩu")
+            return redirect('dn')
+        
+        login(request, user)
+        messages.success(request, f"Chào {username}")
+        return redirect("tc")
     
-    return render(request,"ss/dangnhap.html",{'form':form})
+    return render(request,"ss/dangnhap.html")
 
 def dangxuat(request):
     dx=logout(request )
@@ -277,13 +287,14 @@ def suasp(request, masp):
 
     hinh_da_co = HinhAnhSanPham.objects.filter(san_pham=sp)
     size_da_co = SizeSanPham.objects.filter(sanpham=sp)
+    size_id_daco = size_da_co.values_list('size_id', flat=True)
     dm_da_co = sp.danhmuc.all()
     ncc_da_co = sp.nhacungcap
 
     size_list = Size.objects.all()
     ncc_list = NhaCungCap.objects.all()
     dm_list = Danhmuc.objects.all()
-    size_id_daco = size_da_co.values_list('size_id', flat=True)
+    
 
     if request.method == 'POST':
         
@@ -319,13 +330,25 @@ def suasp(request, masp):
 
         for s_id in size_ids:
             size_obj = Size.objects.get(id=s_id)
-            so_luong = request.POST.get(f"sl_{s_id}") or 1
 
+            so_luong = request.POST.get(f"sl_{s_id}") or 1
+            loai_gia = request.POST.get(f"lg_{s_id}") or 'none'
+            gia_custom = request.POST.get(f"gc_{s_id}") or None
+
+            if loai_gia == 'custom' and gia_custom not in ['', None]:
+                gia_custom = Decimal(gia_custom)
+            else:
+                gia_custom = None
+                loai_gia = 'none'
             SizeSanPham.objects.update_or_create(
                 sanpham=sp,
                 size=size_obj,
-                defaults={'so_luong': so_luong}
-            )
+                defaults={
+                    'so_luong': so_luong,
+                    'loai_gia': loai_gia,
+                    'gia_custom': Decimal(gia_custom) if gia_custom else None
+                }
+             )
 
     
         sp.danhmuc.set(dm_ids)

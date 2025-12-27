@@ -17,6 +17,7 @@
         </h4>
 
         <ul class="sidebar-menu">
+                <li><a href="{% url 'tc'%}"> <span>Home</span></a></li>
                 <li><a href="{% url 'qldm'%}"><i class="bi bi-folder-plus"></i> <span>Danh Mục</span></a></li>
                 <li><a href="{% url 'qlsp'%}"><i class="bi bi-bag-plus"></i> <span>Sản Phẩm</span></a></li>
                 <li><a href="{% url 'qlncc'%}"><i class="bi bi-truck"></i> <span>Nhà Cung Cấp</span></a></li>
@@ -76,64 +77,63 @@
                 <h4>Tổng doanh thu: <span class="text-success">{{dt|floatformat:0|intcomma }} đ</span></h4>
             </div>
 
-            <!-- Danh sách đơn hàng -->
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title mb-3">Danh sách đơn hàng</h5>
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Mã</th>
-                                <th>Tên Sản Phẩm</th>
-                                <th>Khách hàng</th>
-                                <th>Ngày đặt</th>
-                                <th>Tổng tiền</th>
-                                <th>Trạng thái</th>
-                                <th>Hành động</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for hd in ds %}
-                            {% for ct in hd.cthd.all%}
-                            <tr>
-                                <td>{{hd.id}}</td>
-                                <td>{{ct.size_sanpham.sanpham.ten_sp}}</td>
-                                <td>{{hd.nguoidung.username}}</td>
-                                <td>{{hd.ngay_tao|date:"d/m/Y H:i"}}</td>
-                                <td>{{hd.tongcong|floatformat:0|intcomma}} đ</td>
-                                <td>
-                                    <span class="
-                                {% if hd.trang_thai == 'pending' %} bg-warning text-dark
-                                {% elif hd.trang_thai == 'confirmed' %} bg-info
-                                {% elif hd.trang_thai == 'shipping' %} bg-primary
-                                {% elif hd.trang_thai == 'delivered' %} bg-success
-                                {% else %} bg-danger
-                                {% endif %}
-                            ">
-                                        {{ hd.get_trang_thai_display }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <form method="post" action="{% url 'cn' hd.id%}">
-                                        {% csrf_token %}
-                                        <select name="trang_thai" class="form-select form-select-sm d-inline w-auto">
-                                            {% for val, text in hd.trangthai_choices %}
-                                            <option value="{{val}}" {% if hd.trang_thai == val %} selected {%endif%}>
-                                                {{text}}
-                                            </option>
-                                            {% endfor %}
-                                        </select>
-                                        <button class="btn btn-sm btn-outline-primary"> Cập nhật</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            {%endfor%}
-                            {%endfor%}
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending"
+                        type="button" role="tab"  >
+                        Đang chờ xử lý
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link " id="processed-tab" data-bs-toggle="tab" data-bs-target="#confirmed"
+                        type="button" role="tab"  >
+                        Đã xử lý
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping"
+                        type="button" role="tab"  >
+                        Đang giao hàng
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="delivered-tab" data-bs-toggle="tab" data-bs-target="#delivered"
+                        type="button" role="tab"  >
+                        Đã giao
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="cancelled-tab" data-bs-toggle="tab" data-bs-target="#cancelled"
+                        type="button" role="tab"  >
+                        Đã hủy
+                    </button>
+                </li>
+            </ul>
 
-                        </tbody>
-                    </table>
+            <div class="tab-content mt-4">
+                <div class="tab-pane fade show active" id="pending" role="tabpanel">
+                    {% include "ss/quantri_tab.html" with list_hd=ds trangthai="pending"  %}
+                </div>
+
+                <div class="tab-pane fade " id="confirmed" role="tabpanel">
+                    {% include "ss/quantri_tab.html" with list_hd=ds trangthai="confirmed"  %}
+                </div>
+
+                <div class="tab-pane fade " id="shipping" role="tabpanel">
+                    {% include "ss/quantri_tab.html" with list_hd=ds trangthai="shipping" %}
+                </div>
+
+                <div class="tab-pane fade " id="delivered" role="tabpanel">
+                    {% include "ss/quantri_tab.html" with list_hd=ds trangthai="delivered" %}
+                </div>
+
+                <div class="tab-pane fade " id="cancelled" role="tabpanel">
+                    {% include "ss/quantri_tab.html" with list_hd=ds trangthai="cancelled" %}
                 </div>
             </div>
+</div>
+
+
         </div>
     </div>
     <script src="{% static 'js/AllJS.js'%}"></script>

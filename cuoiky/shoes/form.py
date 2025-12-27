@@ -8,14 +8,5 @@ class dangkyform (UserCreationForm ):
     model = Nguoidung
     fields = ['username','phone','email','password1','password2']
 
-  def clean_email(self):
-    email = self.cleaned_data.get('email')
-    if Nguoidung.objects.filter(email=email).exists():
-      raise forms.ValidationError("Email này đã được sử dụng")
-    return email
 
-  def clean_phone(self):
-    phone = self.cleaned_data.get('phone')
-    if Nguoidung.objects.filter(phone=phone).exists():
-      raise forms.ValidationError("SĐT này đã được sử dụng")
-    return phone
+

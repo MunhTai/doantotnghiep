@@ -14,7 +14,7 @@
 
 
 
-<body>
+ <body>
     <div class="header">
         <div class="container mt-5 ">
             <div class="row">
@@ -89,27 +89,61 @@
 </div>
 
 
-       <div>
-  <h2> Chọn size </h2>
+<div>
+  <h2> Chọn size & cấu hình </h2> <br>
 
-  {% for s in size_list %}
-    <label style="display:block; margin-bottom:4px;">
+  <table border="1" cellpadding="6" cellspacing="0" width="100%">
+    <tr style="text-align:center;">
+      <th>Chọn</th>
+      <th>Size</th>
+      <th>Số lượng</th>
+      <th>Loại giá</th>
+      <th>Giá riêng</th>
+    </tr>
 
-      <!-- checkbox chọn size -->
-      <input type="checkbox" name="s" value="{{ s.id }}"
+    {% for s in size_list %}
+    <tr style="text-align:center;">
+
+      <td>
+        <input type="checkbox" name="s" value="{{ s.id }}"
         {% for item in size_da_co %}
           {% if item.size.id == s.id %} checked {% endif %}
         {% endfor %}>
-      {{ s.size }}
+      </td>
 
-      <!-- số lượng của size -->
-      <input type="number"
-             name="sl_{{ s.id }}"
-             value="{% for item in size_da_co %}{% if item.size.id == s.id %}{{ item.so_luong }}{% endif %}{% endfor %}"
-             placeholder="SL"
-             style="width:70px; margin-left:8px;">
-    </label>
-  {% endfor %}
+      <td>{{ s.size }}</td>
+
+      <td>
+        <input type="number" name="sl_{{ s.id }}" style="width:80px"
+       value="{% for item in size_da_co %}{% if item.size.id == s.id %}{{ item.so_luong }}{% endif %}{% endfor %}">
+      </td>
+
+      <td>
+        <select name="lg_{{ s.id }}">
+          <option value="none"
+          {% for item in size_da_co %}
+            {% if item.size.id == s.id and item.loai_gia == 'none' %}selected{% endif %}
+          {% endfor %}>Mặc định</option>
+
+          <option value="custom"
+          {% for item in size_da_co %}
+            {% if item.size.id == s.id and item.loai_gia == 'custom' %}selected{% endif %}
+          {% endfor %}>Tuỳ chỉnh</option>
+        </select>
+      </td>
+
+      <td>
+         <input type="text" step="0.01" name="gc_{{ s.id }}" style="width:110px"
+          {% for item in size_da_co %}
+            {% if item.size.id == s.id and item.gia_custom %}
+              value="{{ item.gia_custom }}"
+            {% endif %}
+          {% endfor %}>
+      </td>
+
+    </tr>
+    {% endfor %}
+  </table>
 </div>
 
 
@@ -119,4 +153,9 @@
             </article>
         </main>
     </div>
-</body>
+</body> 
+
+
+
+
+
