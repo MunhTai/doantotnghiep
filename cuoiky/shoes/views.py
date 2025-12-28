@@ -451,8 +451,6 @@ def thanhtoan(request):
     ten_nguoi_nhan = request.user.username
     sdt = request.user.phone
 
-    if request.method == "GET" and request.GET.get('buy_now') != '1':
-        request.session.pop('mua_ngay', None)
 
     giohang = GioHang.objects.get(nguoi_dung=user)
     ctgh = Chitietgiohang.objects.filter(gio_hang=giohang)
@@ -478,10 +476,13 @@ def thanhtoan(request):
 
     
     phiship = Decimal(30000)
-    tongtien = giohang.tongtien + phiship
-    if sanpham_muangay:
-        tongtien = sanpham_muangay['dongia'] * sanpham_muangay['soluong'] + phiship
 
+    if sanpham_muangay:
+         tam_tinh = sanpham_muangay['dongia'] * sanpham_muangay['soluong']
+    else:
+         tam_tinh = giohang.tongtien
+
+    tongtien = tam_tinh + phiship
   
     if request.method == "POST":
         diachi = request.POST.get('dia_chi')
@@ -493,7 +494,8 @@ def thanhtoan(request):
             dia_chi=diachi,
             phuong_thuc=phuongthuc,
             trang_thai='pending',
-            tong_tien=tongtien
+            tong_tien=tam_tinh,
+            phi_ship=phiship,
         )
 
         for item in ctgh:
@@ -528,7 +530,7 @@ def thanhtoan(request):
             del request.session['mua_ngay']
         messages.success(request,'Đã đặt đơn thành công')
 
-        return redirect("tc")
+        return redirect("dh")
 
   
     context = {
@@ -536,6 +538,7 @@ def thanhtoan(request):
         'ct': ctgh,
         'mua_ngay': sanpham_muangay,
         'tongtien': tongtien,
+        'tamtinh': tam_tinh,
         'ship':phiship,
         'dc':diachi_mac_dinh,
         'ten':ten_nguoi_nhan,

@@ -10,14 +10,18 @@
         <img src="{% static 'images/hinhanh/logo.png'%}" alt="" style="height: 150px;" />
       </div>
 
-      <nav>
+    <nav>
 
+    {% if request.resolver_match.url_name not in 'tsp tdm tncc' %}
       <div class="header-search">
         <form action="{% url 'tk' %}" method="GET">
-          <input class="search-input" name='q'type="text" placeholder="Tìm kiếm...">
-          <button class="search-btn" type="submit"><i class="fa fa-search"></i></button>
+          <input class="search-input" name="q" type="text" placeholder="Tìm kiếm...">
+          <button class="search-btn" type="submit">
+            <i class="fa fa-search"></i>
+          </button>
         </form>
       </div>
+    {% endif %}
       
         <a href="{% url 'tc'%}">HOME</a>
          

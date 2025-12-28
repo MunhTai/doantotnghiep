@@ -20,8 +20,12 @@
 
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="********" required>
-
+                
+                <div style="margin-bottom:5px; cursor: pointer; color: white;" id="togglePasswordText">
+                    Hiện mật khẩu
+                </div>
                 <button type="submit">Đăng nhập</button>
+                
                 <div >
                     <p>Don't have an account? <a href="{%url 'dk'%}">Sign up</a></p>
                 </div>
@@ -29,3 +33,18 @@
         </div>
     </div>
 </body>
+
+<script>
+    const passwordInput = document.getElementById('password');
+    const togglePasswordText = document.getElementById('togglePasswordText');
+
+    togglePasswordText.addEventListener('click', function() {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text'; // hiện mật khẩu
+            togglePasswordText.textContent = 'Ẩn mật khẩu'; // đổi chữ
+        } else {
+            passwordInput.type = 'password'; // ẩn mật khẩu
+            togglePasswordText.textContent = 'Hiện mật khẩu'; // đổi lại
+        }
+    });
+</script>

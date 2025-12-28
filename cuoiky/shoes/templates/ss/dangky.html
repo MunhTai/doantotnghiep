@@ -42,7 +42,10 @@
 
                 <label for="password">Nhập lại mật khẩu</label>
                 <input type="password" name='password2' id="password" placeholder="********" required>
-
+                 
+                <div style="margin-bottom:5px; cursor: pointer; color: white;" id="togglePasswordText">
+                    Hiện mật khẩu
+                </div>
                 
                 <button type="submit">Đăng Ký</button>
                 <div >
@@ -52,3 +55,18 @@
         </div>
     </div>
 </body>
+
+<script>
+    const passwordInput = document.getElementById('password');
+    const togglePasswordText = document.getElementById('togglePasswordText');
+
+    togglePasswordText.addEventListener('click', function() {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text'; // hiện mật khẩu
+            togglePasswordText.textContent = 'Ẩn mật khẩu'; // đổi chữ
+        } else {
+            passwordInput.type = 'password'; // ẩn mật khẩu
+            togglePasswordText.textContent = 'Hiện mật khẩu'; // đổi lại
+        }
+    });
+</script>

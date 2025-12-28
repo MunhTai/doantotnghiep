@@ -8,5 +8,5 @@ def generate_otp():
 
 def send_otp_email(user,code):
     subject = "Mã OTP xác thực tài khoản:"
-    message= f"Chào {user.username},\nMã OTP của bạn là: {code}"
+    message= f"Chào {user.username},\nChúng tôi là TDK SHOES,\nMã OTP của bạn là: {code}"
     send_mail(subject, message, 'youremail@gmail.com', [user.email])
