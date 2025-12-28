@@ -239,7 +239,8 @@ def themncc(request):
         for d in danhmuc:
             dm_obj = Danhmuc.objects.get(id=d)
             dm_obj.ncc.add(taoncc)
-            messages.success(request,f'Đã thêm mới nhà cung cấp {taoncc.ten_ncc}')
+        
+        messages.success(request,f'Đã thêm mới nhà cung cấp {taoncc.ten_ncc}')
 
 
     context ={
@@ -263,6 +264,8 @@ def themdanhmuc(request):
         for n in ncc:
             n_obj = NhaCungCap.objects.get(ten_ncc=n)
             taodm.ncc.add(n_obj)
+
+        messages.success(request,f"Đã thêm danh mục {taodm.ten_dm}")
         
     context={
         'ncc_list':ncc_list
